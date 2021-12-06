@@ -1,0 +1,10 @@
+#application-name: "nhentai" # Uncomment to modify this value.
+#executable-name: "nhentai" # Uncomment to modify this value. Only lowercase a-z, numbers, underscores and no spaces
+#package-name: "nhentai" # Uncomment to modify this value. Only lowercase a-z, numbers and no underscores or spaces
+organization-name: "com.nhentai"
+license: "" # MANDATORY: Fill in your SPDX license name: https://spdx.org/licenses
+target: lib/main_desktop.dart
+# opengl: "none" # Uncomment this line if you have trouble with your OpenGL driver (https://github.com/go-flutter-desktop/go-flutter/issues/272)
+docker: false
+#engine-version: "" # change to a engine version commit
+engine-version: c2fcadef89ad14285f1ed1994f7e00436a6fa07e
