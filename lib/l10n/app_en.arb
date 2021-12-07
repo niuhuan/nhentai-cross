@@ -21,5 +21,8 @@
   "exclusion": "Exclusion",
   "type": "Type",
   "content": "Content",
-  "tag": "Tag"
+  "tag": "Tag",
+  "chooseAction": "Choose action",
+  "saveImage": "Save image",
+  "previewImage": "Preview image"
 }

@@ -3,8 +3,12 @@ import 'dart:async';
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/basic/entities/entities.dart';
+import 'package:nhentai/screens/components/content_loading.dart';
 import 'package:nhentai/screens/components/images.dart';
+
+import 'components/content_error.dart';
 
 class ComicReaderScreen extends StatefulWidget {
   final ComicInfo comicInfo;
@@ -17,8 +21,6 @@ class ComicReaderScreen extends StatefulWidget {
 
 class _ComicReaderScreenState extends State<ComicReaderScreen> {
   late Future _future;
-  bool _fullScreen = false;
-  final int _startIndex = 0; // todo 取库
 
   @override
   void initState() {
@@ -39,38 +41,19 @@ class _ComicReaderScreenState extends State<ComicReaderScreen> {
         }
         return Scaffold(
           backgroundColor: Colors.black,
-          body: _ComicReader(
-            widget.comicInfo,
-            startIndex: _startIndex,
-            fullScreen: _fullScreen,
-            onFullScreenChange: _onFullScreenChange,
-          ),
+          body: _ComicReader(widget.comicInfo),
         );
       },
     );
-  }
-
-  Future _onFullScreenChange(bool fullScreen) async {
-    setState(() {
-      SystemChrome.setEnabledSystemUIOverlays(
-          fullScreen ? [] : SystemUiOverlay.values);
-      _fullScreen = fullScreen;
-    });
   }
 }
 
 class _ComicReader extends StatefulWidget {
   final ComicInfo comicInfo;
-  final int startIndex;
-  final bool fullScreen;
-  final FutureOr Function(bool value) onFullScreenChange;
 
   const _ComicReader(
     this.comicInfo, {
     Key? key,
-    required this.startIndex,
-    required this.fullScreen,
-    required this.onFullScreenChange,
   }) : super(key: key);
 
   @override
@@ -82,56 +65,93 @@ abstract class _ComicReaderState extends State<_ComicReader> {
 
   _needJumpTo(int pageIndex, bool animation);
 
+  late bool _fullScreen;
   late int _startIndex;
   late int _current;
   late int _slider;
+
+  Future _onFullScreenChange(bool fullScreen) async {
+    setState(() {
+      SystemChrome.setEnabledSystemUIOverlays(
+          fullScreen ? [] : SystemUiOverlay.values);
+      _fullScreen = fullScreen;
+    });
+  }
 
   void _onCurrentChange(int index) {
     if (index != _current) {
       setState(() {
         _current = index;
         _slider = index;
-        _onPositionChange(index);
+        var _ = nHentai.saveViewIndex(widget.comicInfo, index); // 在后台线程入库
       });
     }
   }
 
-  _onPositionChange(int index){
-    // todo 入库
+  late Future _future;
+
+  Future _init() async {
+    _fullScreen = false;
+    _startIndex = await nHentai.loadLastViewIndexByComicId(widget.comicInfo.id);
+    _current = _startIndex;
+    _slider = _startIndex;
   }
 
   @override
   void initState() {
-    _startIndex = widget.startIndex;
-    _current = _startIndex;
-    _slider = _startIndex;
+    _future = _init();
     super.initState();
   }
 
   @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _buildViewer(),
-        _buildFrame(),
-      ],
+    return FutureBuilder(
+      future: _future,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasError) {
+          return ContentError(
+            error: snapshot.error,
+            stackTrace: snapshot.stackTrace,
+            onRefresh: () async {
+              setState(() {
+                _future = _init();
+              });
+            },
+          );
+        }
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const ContentLoading();
+        }
+        return Stack(
+          children: [
+            _buildViewer(),
+            _buildFrame(),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildFrame() {
     return Column(
       children: [
-        widget.fullScreen ? Container() : _buildAppBar(),
+        _fullScreen ? Container() : _buildAppBar(),
         Expanded(
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              widget.onFullScreenChange(!widget.fullScreen);
+              _onFullScreenChange(!_fullScreen);
             },
             child: Container(),
           ),
         ),
-        widget.fullScreen ? Container() : _buildBottomBar(),
+        _fullScreen ? Container() : _buildBottomBar(),
       ],
     );
   }
@@ -142,7 +162,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
       actions: [
         IconButton(
           onPressed: _onMoreSetting,
-          icon: Icon(Icons.more_horiz),
+          icon: const Icon(Icons.more_horiz),
         ),
       ],
     );
@@ -151,7 +171,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
   Widget _buildBottomBar() {
     return Container(
       height: 45,
-      color: Color(0x88000000),
+      color: const Color(0x88000000),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -191,14 +211,14 @@ abstract class _ComicReaderState extends State<_ComicReader> {
                 color: Theme.of(context).colorScheme.secondary,
               ),
             ),
-            step: FlutterSliderStep(
+            step: const FlutterSliderStep(
               step: 1,
               isPercentRange: false,
             ),
             tooltip: FlutterSliderTooltip(custom: (value) {
               double a = value + 1;
               return Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: ShapeDecoration(
                   color: Colors.black.withAlpha(0xCC),
                   shape: RoundedRectangleBorder(
@@ -206,7 +226,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
                 ),
                 child: Text(
                   '${a.toInt()}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                   ),
@@ -234,19 +254,12 @@ abstract class _ComicReaderState extends State<_ComicReader> {
 }
 
 class _ComicReaderWebToonState extends _ComicReaderState {
-  late final ScrollController _controller;
+  ScrollController? _controller;
   List<double> _offsets = [];
 
   @override
-  void initState() {
-    _controller = ScrollController();
-    _controller.addListener(_onScroll);
-    super.initState();
-  }
-
-  @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -258,6 +271,10 @@ class _ComicReaderWebToonState extends _ComicReaderState {
             .map((e) => constraints.maxWidth * e.h / e.w)
             .toList()
             .cast<double>();
+        if (_controller == null) {
+          _controller = ScrollController(initialScrollOffset: _initOffset());
+          _controller!.addListener(_onScroll);
+        }
         return ListView.builder(
           controller: _controller,
           padding: EdgeInsets.only(top: super._appBarHeight(), bottom: 130),
@@ -278,7 +295,7 @@ class _ComicReaderWebToonState extends _ComicReaderState {
   }
 
   _onScroll() {
-    double cOff = _controller.offset;
+    double cOff = _controller!.offset;
     double off = 0;
     int i = 0;
     for (; i < _offsets.length; i++) {
@@ -303,6 +320,14 @@ class _ComicReaderWebToonState extends _ComicReaderState {
     super._onCurrentChange(i - 1);
   }
 
+  double _initOffset() {
+    double off = 0;
+    for (var i = 1; i <= _startIndex && i < _offsets.length; i++) {
+      off += _offsets[i - 1];
+    }
+    return off;
+  }
+
   @override
   _needJumpTo(int pageIndex, bool animation) {
     if (_offsets.length > pageIndex) {
@@ -310,7 +335,7 @@ class _ComicReaderWebToonState extends _ComicReaderState {
       for (int i = 0; i < pageIndex - 1; i++) {
         off += _offsets[i];
       }
-      _controller.jumpTo(off);
+      _controller?.jumpTo(off);
     }
   }
 }

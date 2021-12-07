@@ -21,3 +21,21 @@ A beautiful and cross platform *NHentai Client*. Support desktop and mobile phon
 #### Comic reader
 
 ![](images/comic_reader.png)
+
+
+## Build
+
+- Project struct
+  ![](images/technologies.png)
+- mobile
+  ```shell
+  # see go/mobile/*.sh
+  # 1. bind go code to .arr or .xcframework
+  gomobile bind -target=$target -o $libraryLocal $project/go/mobile
+  # 2. flutter build
+  flutter build $system-package
+  ```
+- desktop
+  ```shell
+  hover run
+  ```

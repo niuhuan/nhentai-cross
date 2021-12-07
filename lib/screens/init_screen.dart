@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/configs/img_address.dart';
@@ -34,21 +36,7 @@ class _InitScreenState extends State<InitScreen> {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
-        ),
-        Center(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              var size = constraints.maxWidth < constraints.maxHeight
-                  ? constraints.maxWidth
-                  : constraints.maxHeight;
-              return Image.asset(
-                "lib/assets/startup.png",
-                width: size,
-                height: size,
-              );
-            },
-          ),
+          color: const Color(0xff313131),
         ),
         SafeArea(
           child: Column(
@@ -58,10 +46,31 @@ class _InitScreenState extends State<InitScreen> {
                 color: const Color(0x00000000),
                 child: Text(
                   AppLocalizations.of(context)!.initializing,
-                  style: const TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],
+          ),
+        ),
+        SafeArea(
+          child: Center(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                var size = constraints.maxWidth < constraints.maxHeight
+                    ? constraints.maxWidth
+                    : constraints.maxHeight;
+                size /= 2;
+                return SizedBox(
+                  width: size,
+                  height: size,
+                  child: Image.asset(
+                    "lib/assets/startup.png",
+                    width: size,
+                    height: size,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

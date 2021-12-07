@@ -130,4 +130,22 @@ class NHentai {
       "value": value,
     });
   }
+
+  /// 更新浏览记录 (打开详情页面时)
+  Future<dynamic> saveViewInfo(ComicInfo info) {
+    return _flatInvoke("saveViewInfo", info);
+  }
+
+  /// 更新浏览记录 (打开页面滚动时)
+  Future<dynamic> saveViewIndex(ComicInfo info, int index) {
+    return _flatInvoke("saveViewIndex", {
+      "info": info,
+      "index": index,
+    });
+  }
+
+  /// 获取最后浏览的页数
+  Future<int> loadLastViewIndexByComicId(int comicId) async {
+    return int.parse(await _flatInvoke("loadLastViewIndexByComicId", comicId));
+  }
 }

@@ -21,5 +21,8 @@
   "exclusion": "排除",
   "type": "类型",
   "content": "内容",
-  "tag": "标签"
+  "tag": "标签",
+  "chooseAction": "请选择",
+  "saveImage": "保存图片",
+  "previewImage": "预览图片"
 }

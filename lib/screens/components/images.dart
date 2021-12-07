@@ -1,5 +1,5 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
@@ -102,9 +102,9 @@ Widget buildFile(String file, double? width, double? height,
     image: FileImage(File(file)),
     width: width,
     height: height,
-    errorBuilder: (a, b, c) {
-      print("$b");
-      print("$c");
+    errorBuilder: (context, obj, stackTrace) {
+      print("$obj");
+      print("$stackTrace");
       return buildError(width, height);
     },
     fit: fit,
@@ -112,14 +112,24 @@ Widget buildFile(String file, double? width, double? height,
   if (context == null) return image;
   return GestureDetector(
     onLongPress: () async {
-      String? choose = await chooseListDialog(context, '请选择', ['预览图片', '保存图片']);
+      final previewImageText = AppLocalizations.of(context)!.previewImage;
+      final saveImageText = AppLocalizations.of(context)!.saveImage;
+      final chooseActionText = AppLocalizations.of(context)!.chooseAction;
+      int? choose = await chooseMapDialog(
+        context,
+        {
+          previewImageText: 1,
+          saveImageText: 2,
+        },
+        chooseActionText,
+      );
       switch (choose) {
-        case '预览图片':
+        case 1:
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => FilePhotoViewScreen(file),
           ));
           break;
-        case '保存图片':
+        case 2:
           saveImage(file, context);
           break;
       }

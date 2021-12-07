@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class PageData {
   late int pageCount;
 
@@ -66,6 +64,20 @@ class ComicInfo {
     numPages = json["num_pages"] ?? 0;
     numFavorites = json["num_favorites"] ?? 0;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "media_id": mediaId,
+      "title": title,
+      "images": images,
+      "scanlator": scanlator,
+      "upload_date": uploadDate,
+      "tags": tags,
+      "num_pages": numPages,
+      "num_favorites": numFavorites,
+    };
+  }
 }
 
 class ComicInfoTitle {
@@ -77,6 +89,14 @@ class ComicInfoTitle {
     english = json["english"] ?? "";
     japanese = json["japanese"] ?? "";
     pretty = json["pretty"] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "english": english,
+      "japanese": japanese,
+      "pretty": pretty,
+    };
   }
 }
 
@@ -93,6 +113,14 @@ class ComicImages {
     cover = ImageInfo.formJson(json["cover"]);
     thumbnail = ImageInfo.formJson(json["thumbnail"]);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "pages": pages,
+      "cover": cover,
+      "thumbnail": thumbnail,
+    };
+  }
 }
 
 class ImageInfo {
@@ -104,6 +132,14 @@ class ImageInfo {
     t = json["t"];
     w = json["w"];
     h = json["h"];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "t": t,
+      "w": w,
+      "h": h,
+    };
   }
 }
 
@@ -120,5 +156,15 @@ class ComicInfoTag {
     count = json["count"];
     type = json["type"];
     url = json["url"];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "count": count,
+      "type": type,
+      "url": url,
+    };
   }
 }

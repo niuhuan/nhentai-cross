@@ -23,3 +23,22 @@
 #### 漫画阅读器
 
 ![](images/comic_reader.png)
+
+## 构建
+
+- 项目结构
+  ![](images/technologies.png)
+
+- 手机端
+  ```shell
+  # 参考 go/mobile/*.sh
+  # 1. 将go代码编译成手机端使用的类库
+  gomobile bind -target=$target -o $libraryLocal $project/go/mobile
+  # 2. flutter build
+  lutter build $system-package
+  ```
+
+- 桌面端
+  ```shell
+  hover run
+  ```

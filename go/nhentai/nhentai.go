@@ -2,11 +2,14 @@ package nhentai
 
 import (
 	"encoding/json"
+	"github.com/niuhuan/nhentai-go"
 	"github.com/pkg/errors"
 	"nhentai/nhentai/constant"
+	"nhentai/nhentai/database/active"
 	"nhentai/nhentai/database/cache"
 	"nhentai/nhentai/database/properties"
 	"path"
+	"strconv"
 )
 
 var cachePath string
@@ -16,6 +19,7 @@ func InitNHentai(documentDir string) {
 	constant.ObtainDir(databaseDir)
 	properties.Init(databaseDir)
 	cache.Init(databaseDir)
+	active.Init(databaseDir)
 	cachePath = path.Join(documentDir, "cache")
 	constant.ObtainDir(cachePath)
 	initClient()
@@ -26,21 +30,24 @@ func cacheImagePath(aliasPath string) string {
 }
 
 var methods = map[string]func(string) (string, error){
-	"availableWebAddresses": availableWebAddresses,
-	"availableImgAddresses": availableImgAddresses,
-	"setProxy":              setProxy,
-	"getProxy":              getProxy,
-	"setWebAddress":         setWebAddress,
-	"getWebAddress":         getWebAddress,
-	"setImgAddress":         setImgAddress,
-	"getImgAddress":         getImgAddress,
-	"comics":                comics,
-	"comicsByTagName":       comicsByTagName,
-	"comicsBySearchRaw":     comicsBySearchRaw,
-	"comicInfo":             comicInfo,
-	"cacheImageByUrlPath":   cacheImageByUrlPath,
-	"loadProperty":          loadProperty,
-	"saveProperty":          saveProperty,
+	"availableWebAddresses":      availableWebAddresses,
+	"availableImgAddresses":      availableImgAddresses,
+	"setProxy":                   setProxy,
+	"getProxy":                   getProxy,
+	"setWebAddress":              setWebAddress,
+	"getWebAddress":              getWebAddress,
+	"setImgAddress":              setImgAddress,
+	"getImgAddress":              getImgAddress,
+	"comics":                     comics,
+	"comicsByTagName":            comicsByTagName,
+	"comicsBySearchRaw":          comicsBySearchRaw,
+	"comicInfo":                  comicInfo,
+	"cacheImageByUrlPath":        cacheImageByUrlPath,
+	"loadProperty":               loadProperty,
+	"saveProperty":               saveProperty,
+	"saveViewInfo":               saveViewInfo,
+	"saveViewIndex":              saveViewIndex,
+	"loadLastViewIndexByComicId": loadLastViewIndexByComicId,
 }
 
 func FlatInvoke(method string, params string) (string, error) {
@@ -66,4 +73,27 @@ func loadProperty(params string) (string, error) {
 	}
 	json.Unmarshal([]byte(params), &paramsStruct)
 	return properties.LoadProperty(paramsStruct.Name, paramsStruct.DefaultValue)
+}
+
+func saveViewInfo(params string) (string, error) {
+	var comic nhentai.ComicInfo
+	json.Unmarshal([]byte(params), &comic)
+	return "", active.SaveViewInfo(comic)
+}
+
+func saveViewIndex(params string) (string, error) {
+	var paramsStruct struct {
+		Info  nhentai.ComicInfo `json:"info"`
+		Index int               `json:"index"`
+	}
+	json.Unmarshal([]byte(params), &paramsStruct)
+	return "", active.SaveViewIndex(paramsStruct.Info, paramsStruct.Index)
+}
+
+func loadLastViewIndexByComicId(params string) (string, error) {
+	comicId, err := strconv.Atoi(params)
+	if err != nil {
+		return "", err
+	}
+	return serialize(active.LoadLastViewIndexByComicId(comicId))
 }

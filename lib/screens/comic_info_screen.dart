@@ -22,8 +22,10 @@ class ComicInfoScreen extends StatefulWidget {
 class _ComicInfoScreenState extends State<ComicInfoScreen> {
   late Future<ComicInfo> _future;
 
-  Future<ComicInfo> _loadComic() {
-    return nHentai.comicInfo(widget.comicId);
+  Future<ComicInfo> _loadComic() async {
+    var info = await nHentai.comicInfo(widget.comicId);
+    var _ = nHentai.saveViewInfo(info); // 在后台线程保存浏览记录
+    return info;
   }
 
   @override
@@ -218,7 +220,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
               child: Container(
                 color: Colors.grey.withAlpha(20),
                 padding:
-                const EdgeInsets.only(top: 2, bottom: 2, left: 4, right: 4),
+                    const EdgeInsets.only(top: 2, bottom: 2, left: 4, right: 4),
                 child: Text(e.name),
               ),
             ),
