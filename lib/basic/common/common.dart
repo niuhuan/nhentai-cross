@@ -1,13 +1,6 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-
-/// 默认的图片尺寸
-double coverWidth = 210;
-double coverHeight = 315;
-
-String categoryTitle(String? categoryTitle) {
-  return categoryTitle ?? "全分类";
-}
 
 /// 显示一个toast
 void defaultToast(BuildContext context, String title) {
@@ -31,22 +24,22 @@ Future<bool> confirmDialog(
           context: context,
           builder: (context) => AlertDialog(
                 title: Text(title),
-                content:  SingleChildScrollView(
-                  child:  ListBody(
+                content: SingleChildScrollView(
+                  child: ListBody(
                     children: <Widget>[
-                       Text(content),
+                      Text(content),
                     ],
                   ),
                 ),
                 actions: <Widget>[
-                   MaterialButton(
-                    child:  const Text('取消'),
+                  MaterialButton(
+                    child: Text(AppLocalizations.of(context)!.cancel),
                     onPressed: () {
                       Navigator.of(context).pop(false);
                     },
                   ),
-                   MaterialButton(
-                    child:  const Text('确定'),
+                  MaterialButton(
+                    child: Text(AppLocalizations.of(context)!.ok),
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
@@ -62,16 +55,16 @@ Future alertDialog(BuildContext context, String title, String content) {
       context: context,
       builder: (context) => AlertDialog(
             title: Text(title),
-            content:  SingleChildScrollView(
-              child:  ListBody(
+            content: SingleChildScrollView(
+              child: ListBody(
                 children: <Widget>[
-                   Text(content),
+                  Text(content),
                 ],
               ),
             ),
             actions: <Widget>[
-               MaterialButton(
-                child:  Text('确定'),
+              MaterialButton(
+                child: Text('确定'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -210,7 +203,6 @@ String add0(int num, int len) {
   }
   return rsp;
 }
-
 
 /// 格式化时间 2012-34-56
 String formatTimeToDate(String str) {

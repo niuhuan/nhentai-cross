@@ -1,7 +1,9 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
+import 'package:nhentai/basic/common/common.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/comic_reader_screen.dart';
 import 'package:nhentai/screens/components/actions.dart';
@@ -39,7 +41,31 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.comicTitle),
-        actions: [...alwaysInActions(context)],
+        actions: [
+          FutureBuilder(
+            future: _future,
+            builder: (BuildContext context, AsyncSnapshot<ComicInfo> snapshot) {
+              if (snapshot.hasError ||
+                  snapshot.connectionState != ConnectionState.done) {
+                return Container();
+              }
+              return IconButton(
+                onPressed: () async {
+                  var confirm = await confirmDialog(
+                    context,
+                    AppLocalizations.of(context)!.questionDownloadComic,
+                    "",
+                  );
+                  if (confirm) {
+                    nHentai.downloadComic(snapshot.requireData);
+                  }
+                },
+                icon: const Icon(Icons.download),
+              );
+            },
+          ),
+          ...alwaysInActions(context),
+        ],
       ),
       floatingActionButton: FutureBuilder(
         future: _future,

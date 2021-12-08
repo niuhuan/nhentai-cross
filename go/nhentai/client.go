@@ -177,7 +177,7 @@ func cacheImageByUrlPath(url string) (string, error) {
 }
 
 func decodeAndSaveImage(url string) (*cache.ImageCache, error) {
-	buff, img, format, err := decodeFromUrl(url)
+	buff, err := decodeFromUrl(url)
 	if err != nil {
 		println(fmt.Sprintf("decode error : %s : %s", url, err.Error()))
 		return nil, err
@@ -193,9 +193,6 @@ func decodeAndSaveImage(url string) (*cache.ImageCache, error) {
 	}
 	imageCache := cache.ImageCache{
 		Url:       url,
-		Format:    format,
-		Width:     int32(img.Bounds().Dx()),
-		Height:    int32(img.Bounds().Dy()),
 		LocalPath: local,
 	}
 	err = cache.SaveImageCache(&imageCache)

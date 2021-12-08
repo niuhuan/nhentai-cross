@@ -41,10 +41,16 @@ github.com/miguelpruivo/flutter_file_picker/go v0.0.0-20211202000843-9b75f4016e2
 github.com/miguelpruivo/flutter_file_picker/go v0.0.0-20211202000843-9b75f4016e28/go.mod h1:csuW+TFyYKtiUwNvcvhcpyX4quPI7Pvv0SUogdqCW4I=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 h1:ZqeYNhU3OHLH3mGKHDcjJRFFRrJa6eAM5H+CtDdOsPc=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
+github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/niuhuan/nhentai-go v0.0.0-20211205035338-c452f9f50d02 h1:ZIHT41VkEvZJzJsQcjEwUYyEHpVs7SqVTRCEv1gsUCk=
 github.com/niuhuan/nhentai-go v0.0.0-20211205035338-c452f9f50d02/go.mod h1:4Vj8GRJFi4AAQgz3dRefIcPezroV0/a5Bu2oTgashQc=
+github.com/niuhuan/nhentai-go v0.0.0-20211207101955-8d70ffd44e63 h1:Qu//uLRAw/8+UNtml7hCnXbAKNnGL91JIpY5gyJjVgg=
+github.com/niuhuan/nhentai-go v0.0.0-20211207101955-8d70ffd44e63/go.mod h1:4Vj8GRJFi4AAQgz3dRefIcPezroV0/a5Bu2oTgashQc=
+github.com/niuhuan/nhentai-go v0.0.0-20211208101155-25a06ad6c829 h1:lSdpixiyke5kw0oTX16DNRZxovSPiwQNHnDEZIYrlw8=
+github.com/niuhuan/nhentai-go v0.0.0-20211208101155-25a06ad6c829/go.mod h1:4Vj8GRJFi4AAQgz3dRefIcPezroV0/a5Bu2oTgashQc=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
@@ -80,6 +86,8 @@ golang.org/x/net v0.0.0-20190620200207-3b0461eec859/go.mod h1:z5CRVTTTmAJ677TzLL
 golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 h1:/6y1LfuqNuQdHAm0jjtPtgRcxIxjVZgm5OTu8/QhZvk=
 golang.org/x/net v0.0.0-20210916014120-12bc252f5db8/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
+golang.org/x/net v0.0.0-20211208012354-db4efeb81f4b h1:MWaHNqZy3KTpuTMAGvv+Kw+ylsEpmyJZizz1dqxnu28=
+golang.org/x/net v0.0.0-20211208012354-db4efeb81f4b/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.0.0-20210220032951-036812b2e83c/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=

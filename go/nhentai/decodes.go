@@ -1,16 +1,13 @@
 package nhentai
 
-
 import (
-"bytes"
-"errors"
-_ "golang.org/x/image/webp"
-"image"
-_ "image/gif"
-_ "image/jpeg"
-_ "image/png"
-"io/ioutil"
-"net/http"
+	"errors"
+	_ "golang.org/x/image/webp"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
+	"io/ioutil"
+	"net/http"
 	"nhentai/nhentai/database/cache"
 	"sync"
 )
@@ -34,65 +31,37 @@ func takeMutex() *sync.Mutex {
 	return subMutexes[mutexCounter]
 }
 
-func decodeInfoFromBuff(buff []byte) (image.Image, string, error) {
-	buffer := bytes.NewBuffer(buff)
-	return image.Decode(buffer)
-}
-
-func decodeFromFile(path string) ([]byte, image.Image, string, error) {
-	b, e := ioutil.ReadFile(path)
-	if e != nil {
-		return nil, nil, "", e
-	}
-	i, f, e := decodeInfoFromBuff(b)
-	if e != nil {
-		return nil, nil, "", e
-	}
-	return b, i, f, e
-}
-
 // 下载图片并decode
-func decodeFromUrl(url string) ([]byte, image.Image, string, error) {
+func decodeFromUrl(url string) ([]byte, error) {
 	m := takeMutex()
 	m.Lock()
 	defer m.Unlock()
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 	defer response.Body.Close()
-	if response.StatusCode != 200 {
-		return nil, nil, "", errors.New("code is not 200")
-	}
 	buff, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
-	img, format, err := decodeInfoFromBuff(buff)
-	if err != nil {
-		return nil, nil, "", err
+	if response.StatusCode != 200 {
+		println("NOT 200")
+		println(string(buff))
+		return nil, errors.New("code is not 200")
 	}
-	return buff, img, format, err
+	return buff, nil
 }
 
 // decodeFromCache 仅下载使用
-func decodeFromRemote(url string) ([]byte, image.Image, string, error) {
+func decodeFromRemote(url string) ([]byte, error) {
 	cache := cache.FindImageCache(url)
 	if cache != nil {
-		buff, err := ioutil.ReadFile(cacheImagePath(cache.LocalPath))
-		if err != nil {
-			return nil, nil, "", err
-		}
-		img, format, err := decodeInfoFromBuff(buff)
-		if err != nil {
-			return nil, nil, "", err
-		}
-		return buff, img, format, err
+		return ioutil.ReadFile(cacheImagePath(cache.LocalPath))
 	}
-	return nil, nil, "", errors.New("not found")
+	return nil, errors.New("not found")
 }
-

@@ -12,9 +12,15 @@ import (
 	"strconv"
 )
 
+var initFlag bool
 var cachePath string
+var downloadPath string
 
 func InitNHentai(documentDir string) {
+	if initFlag {
+		return
+	}
+	initFlag = true
 	databaseDir := path.Join(documentDir, "database")
 	constant.ObtainDir(databaseDir)
 	properties.Init(databaseDir)
@@ -22,7 +28,10 @@ func InitNHentai(documentDir string) {
 	active.Init(databaseDir)
 	cachePath = path.Join(documentDir, "cache")
 	constant.ObtainDir(cachePath)
+	downloadPath = path.Join(documentDir, "download")
+	constant.ObtainDir(downloadPath)
 	initClient()
+	go initDownload()
 }
 
 func cacheImagePath(aliasPath string) string {
@@ -48,6 +57,7 @@ var methods = map[string]func(string) (string, error){
 	"saveViewInfo":               saveViewInfo,
 	"saveViewIndex":              saveViewIndex,
 	"loadLastViewIndexByComicId": loadLastViewIndexByComicId,
+	"downloadComic":              downloadComic,
 }
 
 func FlatInvoke(method string, params string) (string, error) {
@@ -96,4 +106,10 @@ func loadLastViewIndexByComicId(params string) (string, error) {
 		return "", err
 	}
 	return serialize(active.LoadLastViewIndexByComicId(comicId))
+}
+
+func downloadComic(params string) (string, error) {
+	var comic nhentai.ComicInfo
+	json.Unmarshal([]byte(params), &comic)
+	return "", active.CreateDownload(comic)
 }

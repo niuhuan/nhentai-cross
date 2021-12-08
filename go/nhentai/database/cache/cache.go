@@ -22,9 +22,6 @@ type NetworkCache struct {
 type ImageCache struct {
 	gorm.Model
 	Url       string `gorm:"index:uk_url,unique" json:"fileServer"`
-	Format    string `json:"format"`
-	Width     int32  `json:"width"`
-	Height    int32  `json:"height"`
 	LocalPath string `json:"localPath"`
 	FileSize  int64  `json:"fileSize"`
 }
@@ -114,9 +111,6 @@ func SaveImageCache(remote *ImageCache) error {
 		DoUpdates: clause.AssignmentColumns([]string{
 			"updated_at",
 			"file_size",
-			"format",
-			"width",
-			"height",
 			"local_path",
 		}),
 	}).Create(remote).Error

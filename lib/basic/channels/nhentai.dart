@@ -148,4 +148,9 @@ class NHentai {
   Future<int> loadLastViewIndexByComicId(int comicId) async {
     return int.parse(await _flatInvoke("loadLastViewIndexByComicId", comicId));
   }
+
+  /// 创建一个下载
+  Future<dynamic> downloadComic(ComicInfo comicInfo) {
+    return _flatInvoke("downloadComic", comicInfo);
+  }
 }
