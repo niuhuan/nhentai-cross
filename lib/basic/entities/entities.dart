@@ -174,3 +174,11 @@ class ComicInfoTag {
     };
   }
 }
+
+class DownloadComicInfo extends ComicInfo {
+  late int downloadStatus;
+
+  DownloadComicInfo.formJson(Map<String, dynamic> json) : super.formJson(json) {
+    downloadStatus = json["download_status"] ?? 0;
+  }
+}

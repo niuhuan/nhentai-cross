@@ -20,6 +20,7 @@ func initDownload() {
 	if initDownloadFlag {
 		return
 	}
+	active.ResetAllDownload()
 	initDownloadFlag = true
 	downloadRunning = true
 	go downloadBegin()

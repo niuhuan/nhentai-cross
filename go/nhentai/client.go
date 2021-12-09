@@ -40,7 +40,7 @@ var client = &source.Client{
 						return dialer.DialContext(ctx, network, webAddr)
 
 					}
-				} else if addr == "t.nhentai.net:443" || addr == "i.nhentai.net:443" || addr == "t5.nhentai.net:443" {
+				} else if addr == "t.nhentai.net:443" || addr == "i.nhentai.net:443" || addr == "t2.nhentai.net:443" || addr == "t5.nhentai.net:443" {
 					if imgAddr != "" {
 						return dialer.DialContext(ctx, network, imgAddr)
 

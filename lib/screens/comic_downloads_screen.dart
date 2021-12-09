@@ -2,6 +2,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/basic/entities/entities.dart';
+import 'package:nhentai/screens/components/actions.dart';
 import 'package:nhentai/screens/components/content_builder.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
@@ -16,7 +17,7 @@ class ComicDownloadsScreen extends StatefulWidget {
 }
 
 class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
-  late Future<List<ComicInfo>> _future;
+  late Future<List<DownloadComicInfo>> _future;
 
   @override
   void initState() {
@@ -29,11 +30,14 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.download),
+        actions: [
+          ...alwaysInActions(context),
+        ],
       ),
       body: ContentBuilder(
         future: _future,
-        successBuilder:
-            (BuildContext context, AsyncSnapshot<List<ComicInfo>> snapshot) {
+        successBuilder: (BuildContext context,
+            AsyncSnapshot<List<DownloadComicInfo>> snapshot) {
           var crossCount = 2;
           var _data = snapshot.requireData;
           return WaterfallFlow.builder(
@@ -55,9 +59,10 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
     );
   }
 
-  Widget _buildImageCard(ComicInfo item) {
+  Widget _buildImageCard(DownloadComicInfo item) {
     return GestureDetector(
       onTap: () {
+        if (item.downloadStatus == 4) return;
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
             return ComicInfoScreen(item.id, item.title.pretty);
@@ -67,15 +72,61 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
       child: Card(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return ScaleNHentaiImage(
-              url: "https://t2.nhentai.net/galleries/${item.mediaId}/thumb.jpg",
-              originSize: Size(
-                item.images.thumbnail.w.toDouble(),
-                item.images.thumbnail.h.toDouble(),
+            var width = constraints.maxWidth;
+            var height = constraints.maxWidth *
+                item.images.thumbnail.h /
+                item.images.thumbnail.w;
+            return SizedBox(
+              width: width,
+              height: height,
+              child: Stack(
+                children: [
+                  RemoteImage(
+                    url:
+                        "https://t2.nhentai.net/galleries/${item.mediaId}/thumb.jpg",
+                    size: Size(width, height),
+                  ),
+                  _buildDownloadStatus(item.downloadStatus),
+                ],
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildDownloadStatus(int downloadStatus) {
+    late IconData iconData;
+    late Color color;
+    switch (downloadStatus) {
+      case 1:
+        iconData = Icons.download_done_sharp;
+        color = Colors.green;
+        break;
+      case 2:
+        iconData = Icons.error_outline;
+        color = Colors.yellow;
+        break;
+      case 3:
+        iconData = Icons.auto_delete_outlined;
+        color = Colors.red;
+        break;
+      default:
+        iconData = Icons.query_builder;
+        color = Colors.grey;
+        break;
+    }
+    return Align(
+      alignment: Alignment.topRight,
+      child: Container(
+        margin: EdgeInsets.only(top: 3, right: 3),
+        padding: EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: Icon(iconData, color: Colors.white, size: 14),
       ),
     );
   }

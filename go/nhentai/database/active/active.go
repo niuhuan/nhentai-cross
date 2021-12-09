@@ -616,6 +616,7 @@ func ListDownloadComicInfo() []DownloadComicInfo {
 				NumPages:     downloads[i].NumPages,
 				NumFavorites: downloads[i].NumFavorites,
 			},
+			DownloadStatus: downloads[i].DownloadStatus,
 		}
 	}
 	return infos
@@ -679,4 +680,31 @@ func filterCoverThumb(covers []DownloadCoverThumb, id int) nhentai.ImageInfo {
 
 type DownloadComicInfo struct {
 	nhentai.ComicInfo
+	DownloadStatus int `json:"download_status"`
+}
+
+func ResetAllDownload() {
+	mutex.Lock()
+	defer mutex.Unlock()
+	var err error
+	err = db.Exec("UPDATE download set download_status = 0 WHERE download_status = 2").Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Exec("UPDATE download_cover set download_status = 0 WHERE download_status = 2").Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Exec("UPDATE download_cover_thumb set download_status = 0 WHERE download_status = 2").Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Exec("UPDATE download_page set download_status = 0 WHERE download_status = 2").Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Exec("UPDATE download_page_thumb set download_status = 0 WHERE download_status = 2").Error
+	if err != nil {
+		panic(err)
+	}
 }

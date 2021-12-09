@@ -160,10 +160,10 @@ class NHentai {
   }
 
   /// 获取所有下载列表
-  Future<List<ComicInfo>> listDownloadComicInfo() async {
+  Future<List<DownloadComicInfo>> listDownloadComicInfo() async {
     return List.of(jsonDecode(await _flatInvoke("listDownloadComicInfo", "")))
-        .map((e) => ComicInfo.formJson(e))
+        .map((e) => DownloadComicInfo.formJson(e))
         .toList()
-        .cast<ComicInfo>();
+        .cast<DownloadComicInfo>();
   }
 }
