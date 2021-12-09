@@ -10,9 +10,11 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"nhentai/nhentai/database/active"
 	"nhentai/nhentai/database/cache"
 	"nhentai/nhentai/database/properties"
 	"os"
+	"path"
 	"strconv"
 	"time"
 )
@@ -165,7 +167,29 @@ func cacheImageByUrlPath(url string) (string, error) {
 	lock := HashLock(url)
 	lock.Lock()
 	defer lock.Unlock()
+	// downloadPage
+	p1 := active.FindDownloadPageByUrl(url)
+	if p1 != nil {
+		return path.Join(downloadPath, p1.DownloadLocalPath), nil
+	}
+	// downloadPageThumb
+	p2 := active.FindDownloadPageThumbByUrl(url)
+	if p2 != nil {
+		return path.Join(downloadPath, p2.DownloadLocalPath), nil
+	}
+	// downloadCover
+	p3 := active.FindDownloadCoverByUrl(url)
+	if p3 != nil {
+		return path.Join(downloadPath, p3.DownloadLocalPath), nil
+	}
+	// downloadCoverThumb
+	p4 := active.FindDownloadCoverThumbByUrl(url)
+	if p4 != nil {
+		return path.Join(downloadPath, p4.DownloadLocalPath), nil
+	}
+	// cache
 	cache := cache.FindImageCache(url)
+	// no cache
 	if cache == nil {
 		remote, err := decodeAndSaveImage(url)
 		if err != nil {

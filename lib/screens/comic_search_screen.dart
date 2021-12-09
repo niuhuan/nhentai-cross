@@ -59,12 +59,20 @@ class ComicSearchScreen extends StatefulWidget {
 }
 
 class _ComicSearchScreenState extends State<ComicSearchScreen> {
-  late ComicSearchStruct searchStruct = widget.defaultSearchStruct;
-  late final FocusNode _searchContentFocusNode = FocusNode();
+  late ComicSearchStruct _searchStruct = widget.defaultSearchStruct;
+  late final _searchContentFocusNode = FocusNode();
+  late final _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    _textEditingController.text = _searchStruct.searchContext;
+    super.initState();
+  }
 
   @override
   void dispose() {
     _searchContentFocusNode.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -75,8 +83,16 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
         title: Text(AppLocalizations.of(context)!.search),
         actions: [
           IconButton(
+              onPressed: () {
+                setState(() {
+                  _searchStruct = ComicSearchStruct();
+                  _textEditingController.text = _searchStruct.searchContext;
+                });
+              },
+              icon: const Icon(Icons.search_off)),
+          IconButton(
             onPressed: () {
-              Navigator.of(context).pop(searchStruct);
+              Navigator.of(context).pop(_searchStruct);
             },
             icon: const Icon(Icons.done),
           ),
@@ -87,9 +103,9 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
           Container(height: 15),
           Container(
             padding: const EdgeInsets.all(15),
-            child: TextFormField(
-              initialValue: searchStruct.searchContext,
-              onChanged: (value) => searchStruct.searchContext = value,
+            child: TextField(
+              controller: _textEditingController,
+              onChanged: (value) => _searchStruct.searchContext = value,
               focusNode: _searchContentFocusNode,
               cursorColor: Colors.red,
               decoration: InputDecoration(
@@ -98,16 +114,13 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
-              validator: (val) {
-                return null;
-              },
               style: const TextStyle(),
             ),
           ),
           Container(
             margin: const EdgeInsets.all(15),
             child: Wrap(
-              children: searchStruct.conditions
+              children: _searchStruct.conditions
                   .map(_buildCondition)
                   .toList()
                   .cast<Widget>(),
@@ -153,7 +166,7 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
                     });
                 if (con != null) {
                   setState(() {
-                    searchStruct.conditions.add(con);
+                    _searchStruct.conditions.add(con);
                   });
                 }
               },
@@ -169,7 +182,7 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          searchStruct.conditions.remove(condition);
+          _searchStruct.conditions.remove(condition);
         });
       },
       child: Card(

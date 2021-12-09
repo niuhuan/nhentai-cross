@@ -23,6 +23,7 @@ class ComicInfoScreen extends StatefulWidget {
 
 class _ComicInfoScreenState extends State<ComicInfoScreen> {
   late Future<ComicInfo> _future;
+  late Future<bool> _hasDownloadFuture;
 
   Future<ComicInfo> _loadComic() async {
     var info = await nHentai.comicInfo(widget.comicId);
@@ -33,6 +34,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
   @override
   void initState() {
     _future = _loadComic();
+    _hasDownloadFuture = nHentai.hasDownload(widget.comicId);
     super.initState();
   }
 
@@ -44,23 +46,46 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
         actions: [
           FutureBuilder(
             future: _future,
-            builder: (BuildContext context, AsyncSnapshot<ComicInfo> snapshot) {
-              if (snapshot.hasError ||
-                  snapshot.connectionState != ConnectionState.done) {
+            builder:
+                (BuildContext context, AsyncSnapshot<ComicInfo> snapshot1) {
+              if (snapshot1.hasError ||
+                  snapshot1.connectionState != ConnectionState.done) {
                 return Container();
               }
-              return IconButton(
-                onPressed: () async {
-                  var confirm = await confirmDialog(
-                    context,
-                    AppLocalizations.of(context)!.questionDownloadComic,
-                    "",
-                  );
-                  if (confirm) {
-                    nHentai.downloadComic(snapshot.requireData);
+              return FutureBuilder(
+                future: _hasDownloadFuture,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot2) {
+                  if (snapshot2.hasError ||
+                      snapshot2.connectionState != ConnectionState.done) {
+                    return Container();
+                  }
+                  if (snapshot2.requireData) {
+                    // todo downloading
+                    return IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.download_done),
+                    );
+                  } else {
+                    // todo reload
+                    return IconButton(
+                      onPressed: () async {
+                        var confirm = await confirmDialog(
+                          context,
+                          AppLocalizations.of(context)!.questionDownloadComic,
+                          "",
+                        );
+                        if (confirm) {
+                          await nHentai.downloadComic(snapshot1.requireData);
+                          setState(() {
+                            _hasDownloadFuture =
+                                nHentai.hasDownload(widget.comicId);
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.download),
+                    );
                   }
                 },
-                icon: const Icon(Icons.download),
               );
             },
           ),

@@ -70,7 +70,6 @@ class _PageState extends State<Pager> {
 
   @override
   void dispose() {
-    _joinFuture = _join();
     _controller.removeListener(_onScroll);
     _controller.dispose();
     super.dispose();
@@ -84,7 +83,7 @@ class _PageState extends State<Pager> {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       itemCount: _data.length + 1,
-      gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossCount,
         crossAxisSpacing: 0,
         mainAxisSpacing: 0,

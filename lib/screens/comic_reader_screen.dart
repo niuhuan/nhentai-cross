@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,9 @@ abstract class _ComicReaderState extends State<_ComicReader> {
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    if (Platform.isAndroid || Platform.isIOS) {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    }
     super.dispose();
   }
 

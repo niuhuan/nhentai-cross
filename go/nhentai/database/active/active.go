@@ -494,3 +494,73 @@ func SaveDownloadStatus(id int, status int) error {
 		"download_status": status,
 	}).Error
 }
+
+func FindDownloadPageByUrl(url string) *DownloadPage {
+	mutex.Lock()
+	defer mutex.Unlock()
+	page := DownloadPage{}
+	err := db.Where("url = ? AND download_status = 1", url).First(&page).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			panic(err)
+		}
+		return nil
+	}
+	return &page
+}
+
+func FindDownloadPageThumbByUrl(url string) *DownloadPageThumb {
+	mutex.Lock()
+	defer mutex.Unlock()
+	page := DownloadPageThumb{}
+	err := db.Where("url = ? AND download_status = 1", url).First(&page).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			panic(err)
+		}
+		return nil
+	}
+	return &page
+}
+
+func FindDownloadCoverByUrl(url string) *DownloadCover {
+	mutex.Lock()
+	defer mutex.Unlock()
+	page := DownloadCover{}
+	err := db.Where("url = ? AND download_status = 1", url).First(&page).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			panic(err)
+		}
+		return nil
+	}
+	return &page
+}
+
+func FindDownloadCoverThumbByUrl(url string) *DownloadCoverThumb {
+	mutex.Lock()
+	defer mutex.Unlock()
+	page := DownloadCoverThumb{}
+	err := db.Where("url = ? AND download_status = 1", url).First(&page).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			panic(err)
+		}
+		return nil
+	}
+	return &page
+}
+
+func HasDownload(comicId int) bool {
+	mutex.Lock()
+	defer mutex.Unlock()
+	var download Download
+	err := db.Where("id = ?",comicId).First(&download).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound{
+			return false
+		}
+		panic(err)
+	}
+	return true
+}

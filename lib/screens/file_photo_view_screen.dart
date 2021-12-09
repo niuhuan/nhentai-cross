@@ -41,7 +41,8 @@ class FilePhotoViewScreen extends StatelessWidget {
                     bottomRight: Radius.circular(8),
                   ),
                 ),
-                child: const Icon(Icons.keyboard_backspace, color: Colors.white),
+                child:
+                    const Icon(Icons.keyboard_backspace, color: Colors.white),
               ),
             ),
           ],

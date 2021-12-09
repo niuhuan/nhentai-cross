@@ -58,6 +58,7 @@ var methods = map[string]func(string) (string, error){
 	"saveViewIndex":              saveViewIndex,
 	"loadLastViewIndexByComicId": loadLastViewIndexByComicId,
 	"downloadComic":              downloadComic,
+	"hasDownload":                hasDownload,
 }
 
 func FlatInvoke(method string, params string) (string, error) {
@@ -112,4 +113,12 @@ func downloadComic(params string) (string, error) {
 	var comic nhentai.ComicInfo
 	json.Unmarshal([]byte(params), &comic)
 	return "", active.CreateDownload(comic)
+}
+
+func hasDownload(params string) (string, error) {
+	comicId, err := strconv.Atoi(params)
+	if err != nil {
+		return "", err
+	}
+	return strconv.FormatBool(active.HasDownload(comicId)), nil
 }

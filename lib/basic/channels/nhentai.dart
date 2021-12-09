@@ -153,4 +153,10 @@ class NHentai {
   Future<dynamic> downloadComic(ComicInfo comicInfo) {
     return _flatInvoke("downloadComic", comicInfo);
   }
+
+  /// 检查有没有下载过
+  Future<bool> hasDownload(int comicId) async {
+    return "true" == await _flatInvoke("hasDownload", "$comicId");
+  }
+
 }

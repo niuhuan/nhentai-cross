@@ -51,6 +51,10 @@ class _ComicsScreenState extends State<ComicsScreen> {
             },
             icon: const Icon(Icons.search),
           ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.archive),
+          ),
           ...alwaysInActions(context),
         ],
       ),
