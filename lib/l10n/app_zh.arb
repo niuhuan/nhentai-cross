@@ -25,5 +25,6 @@
   "chooseAction": "请选择",
   "saveImage": "保存图片",
   "previewImage": "预览图片",
-  "questionDownloadComic": "下载这个漫画吗？"
+  "questionDownloadComic": "下载这个漫画吗？",
+  "download": "下载"
 }

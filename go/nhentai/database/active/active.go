@@ -555,12 +555,128 @@ func HasDownload(comicId int) bool {
 	mutex.Lock()
 	defer mutex.Unlock()
 	var download Download
-	err := db.Where("id = ?",comicId).First(&download).Error
+	err := db.Where("id = ?", comicId).First(&download).Error
 	if err != nil {
-		if err == gorm.ErrRecordNotFound{
+		if err == gorm.ErrRecordNotFound {
 			return false
 		}
 		panic(err)
 	}
 	return true
+}
+
+func ListDownloadComicInfo() []DownloadComicInfo {
+	mutex.Lock()
+	defer mutex.Unlock()
+	var err error
+	var downloads []Download
+	var tags []DownloadTag
+	var thumbs []DownloadCoverThumb
+	var covers []DownloadCover
+	var pages []DownloadPage
+	err = db.Find(&downloads).Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Find(&tags).Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Find(&covers).Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Find(&thumbs).Error
+	if err != nil {
+		panic(err)
+	}
+	err = db.Order("page_index ASC").Find(&pages).Error
+	if err != nil {
+		panic(err)
+	}
+	var infos = make([]DownloadComicInfo, len(downloads))
+	for i := 0; i < len(infos); i++ {
+		infos[i] = DownloadComicInfo{
+			ComicInfo: nhentai.ComicInfo{
+				Id:      downloads[i].ID,
+				MediaId: downloads[i].MediaId,
+				Title: nhentai.ComicInfoTitle{
+					English:  downloads[i].TitleEnglish,
+					Japanese: downloads[i].TitleJapanese,
+					Pretty:   downloads[i].TitlePretty,
+				},
+				Images: nhentai.ComicInfoImages{
+					Pages:     filterPages(pages, downloads[i].ID),
+					Cover:     filterCover(covers, downloads[i].ID),
+					Thumbnail: filterCoverThumb(thumbs, downloads[i].ID),
+				},
+				Scanlator:    downloads[i].Scanlator,
+				UploadDate:   downloads[i].UploadDate,
+				Tags:         filterTags(tags, downloads[i].ID),
+				NumPages:     downloads[i].NumPages,
+				NumFavorites: downloads[i].NumFavorites,
+			},
+		}
+	}
+	return infos
+}
+
+func filterPages(pages []DownloadPage, id int) []nhentai.ImageInfo {
+	rsp := make([]nhentai.ImageInfo, 0)
+	for i := 0; i < len(pages); i++ {
+		if pages[i].ComicId == id {
+			rsp = append(rsp, nhentai.ImageInfo{
+				T: pages[i].T,
+				W: pages[i].W,
+				H: pages[i].H,
+			})
+		}
+	}
+	return rsp
+}
+
+func filterTags(tags []DownloadTag, id int) []nhentai.ComicInfoTag {
+	rsp := make([]nhentai.ComicInfoTag, 0)
+	for i := 0; i < len(tags); i++ {
+		if tags[i].ComicId == id {
+			rsp = append(rsp, nhentai.ComicInfoTag{
+				Id:    tags[i].ID,
+				Name:  tags[i].Name,
+				Count: tags[i].Count,
+				Type:  tags[i].Type,
+				Url:   tags[i].Url,
+			})
+		}
+	}
+	return rsp
+}
+
+func filterCover(covers []DownloadCover, id int) nhentai.ImageInfo {
+	for i := 0; i < len(covers); i++ {
+		if covers[i].ComicId == id {
+			return nhentai.ImageInfo{
+				T: covers[i].T,
+				W: covers[i].W,
+				H: covers[i].H,
+			}
+		}
+	}
+	return nhentai.ImageInfo{}
+}
+
+func filterCoverThumb(covers []DownloadCoverThumb, id int) nhentai.ImageInfo {
+	for i := 0; i < len(covers); i++ {
+		if covers[i].ComicId == id {
+			return nhentai.ImageInfo{
+				T: covers[i].T,
+				W: covers[i].W,
+				H: covers[i].H,
+			}
+		}
+	}
+	return nhentai.ImageInfo{}
+}
+
+type DownloadComicInfo struct {
+	nhentai.ComicInfo
 }

@@ -159,4 +159,11 @@ class NHentai {
     return "true" == await _flatInvoke("hasDownload", "$comicId");
   }
 
+  /// 获取所有下载列表
+  Future<List<ComicInfo>> listDownloadComicInfo() async {
+    return List.of(jsonDecode(await _flatInvoke("listDownloadComicInfo", "")))
+        .map((e) => ComicInfo.formJson(e))
+        .toList()
+        .cast<ComicInfo>();
+  }
 }

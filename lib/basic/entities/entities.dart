@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
+
 class PageData {
   late int pageCount;
 
   PageData.fromJson(Map<String, dynamic> json) {
     pageCount = json["page_count"] ?? 0;
   }
+
+  PageData(this.pageCount);
 }
 
 class ComicPageData extends PageData {
@@ -15,6 +19,8 @@ class ComicPageData extends PageData {
         .toList()
         .cast<ComicSimple>();
   }
+
+  ComicPageData(int pageCount, this.records) : super(pageCount);
 }
 
 class ComicSimple {

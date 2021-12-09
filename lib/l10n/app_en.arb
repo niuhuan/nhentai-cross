@@ -25,5 +25,6 @@
   "chooseAction": "Choose action",
   "saveImage": "Save image",
   "previewImage": "Preview image",
-  "questionDownloadComic": "Download this comic?"
+  "questionDownloadComic": "Download this comic?",
+  "download": "Download"
 }

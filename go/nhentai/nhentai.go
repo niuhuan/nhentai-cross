@@ -59,6 +59,7 @@ var methods = map[string]func(string) (string, error){
 	"loadLastViewIndexByComicId": loadLastViewIndexByComicId,
 	"downloadComic":              downloadComic,
 	"hasDownload":                hasDownload,
+	"listDownloadComicInfo":      listDownloadComicInfo,
 }
 
 func FlatInvoke(method string, params string) (string, error) {
@@ -122,3 +123,8 @@ func hasDownload(params string) (string, error) {
 	}
 	return strconv.FormatBool(active.HasDownload(comicId)), nil
 }
+
+func listDownloadComicInfo(s string) (string, error) {
+	return serialize(active.ListDownloadComicInfo(), nil)
+}
+

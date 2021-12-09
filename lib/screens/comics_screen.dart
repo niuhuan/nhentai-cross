@@ -6,6 +6,7 @@ import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/screens/comic_search_screen.dart';
 import 'package:nhentai/screens/components/pager.dart';
 
+import 'comic_downloads_screen.dart';
 import 'components/actions.dart';
 
 class ComicsScreen extends StatefulWidget {
@@ -52,7 +53,13 @@ class _ComicsScreenState extends State<ComicsScreen> {
             icon: const Icon(Icons.search),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const ComicDownloadsScreen();
+                },
+              ));
+            },
             icon: const Icon(Icons.archive),
           ),
           ...alwaysInActions(context),
