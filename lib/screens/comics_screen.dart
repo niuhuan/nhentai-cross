@@ -62,7 +62,7 @@ class _ComicsScreenState extends State<ComicsScreen> {
             },
             icon: const Icon(Icons.archive),
           ),
-          ...alwaysInActions(context),
+          ...alwaysInActions(),
         ],
       ),
       body: Pager(

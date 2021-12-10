@@ -31,7 +31,7 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.download),
         actions: [
-          ...alwaysInActions(context),
+          ...alwaysInActions(),
         ],
       ),
       body: ContentBuilder(

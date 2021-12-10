@@ -26,5 +26,16 @@
   "saveImage": "保存图片",
   "previewImage": "预览图片",
   "questionDownloadComic": "下载这个漫画吗？",
-  "download": "下载"
+  "download": "下载",
+  "checkingNewVersion": "正在检查更新",
+  "success": "成功",
+  "failed": "失败",
+  "autoCheckNewVersion": "自动检查更新",
+  "disabled": "已禁用",
+  "enabled": "已开启",
+  "enable": "开启",
+  "nextTime": "下一次",
+  "aWeek": "一周后",
+  "aMonth": "一个月后",
+  "aYear": "一年后"
 }

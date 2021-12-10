@@ -166,4 +166,10 @@ class NHentai {
         .toList()
         .cast<DownloadComicInfo>();
   }
+
+  /// HTTP-GET-STRING
+  Future<String> httpGet(String url) async {
+    return await _flatInvoke("httpGet", url);
+  }
+
 }

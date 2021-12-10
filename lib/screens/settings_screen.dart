@@ -2,6 +2,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/configs/img_address.dart';
 import 'package:nhentai/basic/configs/themes.dart';
+import 'package:nhentai/basic/configs/version.dart';
 import 'package:nhentai/basic/configs/web_address.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -20,6 +21,10 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           webAddressSetting(),
           imgAddressSetting(),
+          const Divider(),
+          autoUpdateCheckSetting(),
+          const Divider(),
+          const VersionInfo(),
           const Divider(),
         ],
       ),

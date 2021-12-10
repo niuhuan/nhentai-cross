@@ -26,5 +26,17 @@
   "saveImage": "Save image",
   "previewImage": "Preview image",
   "questionDownloadComic": "Download this comic?",
-  "download": "Download"
+  "download": "Download",
+  "checkingNewVersion": "Checking new version",
+  "success": "Success",
+  "failed": "Failed",
+  "autoCheckNewVersion": "Auto check new version",
+  "disabled": "Disabled",
+  "disable": "Disable",
+  "enabled": "Enabled",
+  "enable": "Enable",
+  "nextTime": "Next time",
+  "aWeek": "A week",
+  "aMonth": "A month",
+  "aYear": "A year"
 }

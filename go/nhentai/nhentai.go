@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/niuhuan/nhentai-go"
 	"github.com/pkg/errors"
+	"io/ioutil"
 	"nhentai/nhentai/constant"
 	"nhentai/nhentai/database/active"
 	"nhentai/nhentai/database/cache"
@@ -60,6 +61,7 @@ var methods = map[string]func(string) (string, error){
 	"downloadComic":              downloadComic,
 	"hasDownload":                hasDownload,
 	"listDownloadComicInfo":      listDownloadComicInfo,
+	"httpGet":                    httpGet,
 }
 
 func FlatInvoke(method string, params string) (string, error) {
@@ -128,3 +130,15 @@ func listDownloadComicInfo(s string) (string, error) {
 	return serialize(active.ListDownloadComicInfo(), nil)
 }
 
+func httpGet(url string) (string, error) {
+	rsp, err := client.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer rsp.Body.Close()
+	buff, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(buff), nil
+}

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/configs/img_address.dart';
 import 'package:nhentai/basic/configs/themes.dart';
+import 'package:nhentai/basic/configs/version.dart';
 import 'package:nhentai/basic/configs/web_address.dart';
 
 import 'comics_screen.dart';
@@ -23,6 +24,8 @@ class _InitScreenState extends State<InitScreen> {
   }
 
   Future<void> _init() async {
+    await initVersion();
+    autoCheckNewVersion();
     await initTheme();
     await initWebAddressConfig();
     await initImgAddressConfig();

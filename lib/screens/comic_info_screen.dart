@@ -89,7 +89,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
               );
             },
           ),
-          ...alwaysInActions(context),
+          ...alwaysInActions(),
         ],
       ),
       floatingActionButton: FutureBuilder(
