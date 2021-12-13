@@ -61,6 +61,7 @@ var methods = map[string]func(string) (string, error){
 	"downloadComic":              downloadComic,
 	"hasDownload":                hasDownload,
 	"listDownloadComicInfo":      listDownloadComicInfo,
+	"downloadSetDelete":          downloadSetDelete,
 	"httpGet":                    httpGet,
 }
 
@@ -128,6 +129,16 @@ func hasDownload(params string) (string, error) {
 
 func listDownloadComicInfo(s string) (string, error) {
 	return serialize(active.ListDownloadComicInfo(), nil)
+}
+
+func downloadSetDelete(params string) (string, error) {
+	comicId, err := strconv.Atoi(params)
+	if err != nil {
+		return "", err
+	}
+	active.MarkComicDeleting(comicId)
+	downloadRestart = true
+	return "", nil
 }
 
 func httpGet(url string) (string, error) {

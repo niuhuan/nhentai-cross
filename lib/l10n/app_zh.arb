@@ -37,5 +37,7 @@
   "nextTime": "下一次",
   "aWeek": "一周后",
   "aMonth": "一个月后",
-  "aYear": "一年后"
+  "aYear": "一年后",
+  "delete": "删除",
+  "deleting": "删除中"
 }

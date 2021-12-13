@@ -708,3 +708,62 @@ func ResetAllDownload() {
 		panic(err)
 	}
 }
+
+func MarkComicDeleting(id int) {
+	mutex.Lock()
+	defer mutex.Unlock()
+	err := db.Model(&Download{}).Where("id = ?", id).Update("download_status", 3).Error
+	if err != nil {
+		panic(err)
+	}
+}
+
+func LoadFirstNeedDelete() *Download {
+	mutex.Lock()
+	defer mutex.Unlock()
+	download := Download{}
+	err := db.Where("download_status = 3").Order("download_created_time ASC").First(&download).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
+		panic(err)
+	}
+	return &download
+}
+
+func DeletedComic(id int) {
+	mutex.Lock()
+	defer mutex.Unlock()
+	err := db.Transaction(func(tx *gorm.DB) error {
+		var err error
+		err = tx.Unscoped().Delete(&Download{}, "id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Unscoped().Delete(&DownloadCover{}, "comic_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Unscoped().Delete(&DownloadPage{}, "comic_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Unscoped().Delete(&DownloadTag{}, "comic_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Unscoped().Delete(&DownloadCoverThumb{}, "comic_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Unscoped().Delete(&DownloadPageThumb{}, "comic_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+}

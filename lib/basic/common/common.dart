@@ -18,17 +18,19 @@ void defaultToast(BuildContext context, String title) {
 }
 
 /// 显示一个确认框, 用户关闭弹窗以及选择否都会返回false, 仅当用户选择确定时返回true
-Future<bool> confirmDialog(
-    BuildContext context, String title, String content) async {
+Future<bool> confirmDialog(BuildContext context, String title,
+    {String content = ""}) async {
   return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
                 title: Text(title),
                 content: SingleChildScrollView(
                   child: ListBody(
-                    children: <Widget>[
-                      Text(content),
-                    ],
+                    children: content == ""
+                        ? []
+                        : <Widget>[
+                            Text(content),
+                          ],
                   ),
                 ),
                 actions: <Widget>[

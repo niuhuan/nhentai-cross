@@ -6,6 +6,8 @@ import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/basic/common/common.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/comic_reader_screen.dart';
+import 'package:nhentai/screens/comic_search_screen.dart';
+import 'package:nhentai/screens/comics_screen.dart';
 import 'package:nhentai/screens/components/actions.dart';
 import 'package:nhentai/screens/components/content_builder.dart';
 import 'package:nhentai/screens/components/images.dart';
@@ -72,7 +74,6 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
                         var confirm = await confirmDialog(
                           context,
                           AppLocalizations.of(context)!.questionDownloadComic,
-                          "",
                         );
                         if (confirm) {
                           await nHentai.downloadComic(snapshot1.requireData);
@@ -261,33 +262,48 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
   }
 
   Widget _buildTag(ComicInfoTag e) {
-    return Card(
-      child: Text.rich(TextSpan(
-        style: const TextStyle(fontSize: 10),
-        children: [
-          WidgetSpan(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-              child: Container(
-                color: Colors.grey.withAlpha(20),
-                padding:
-                    const EdgeInsets.only(top: 2, bottom: 2, left: 4, right: 4),
-                child: Text(e.name),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return ComicsScreen(
+            searchStruct: ComicSearchStruct(
+              searchContext: "",
+              conditions: [
+                ComicSearchCondition('tag', e.name, false),
+              ],
+            ),
+          );
+        }));
+      },
+      child: Card(
+        child: Text.rich(TextSpan(
+          style: const TextStyle(fontSize: 10),
+          children: [
+            WidgetSpan(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                child: Container(
+                  color: Colors.grey.withAlpha(20),
+                  padding: const EdgeInsets.only(
+                      top: 2, bottom: 2, left: 4, right: 4),
+                  child: Text(e.name),
+                ),
               ),
             ),
-          ),
-          WidgetSpan(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-              child: Container(
-                padding:
-                    const EdgeInsets.only(top: 2, bottom: 2, left: 4, right: 4),
-                child: Text("${e.count}"),
+            WidgetSpan(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      top: 2, bottom: 2, left: 4, right: 4),
+                  child: Text("${e.count}"),
+                ),
               ),
             ),
-          ),
-        ],
-      )),
+          ],
+        )),
+      ),
     );
   }
 }

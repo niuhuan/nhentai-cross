@@ -91,7 +91,7 @@ Future<String?> chooseFolder(BuildContext context) async {
 
 /// 复制对话框
 void confirmCopy(BuildContext context, String content) async {
-  if (await confirmDialog(context, "复制", content)) {
+  if (await confirmDialog(context, "复制", content: content)) {
     copyToClipBoard(context, content);
   }
 }

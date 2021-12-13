@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"nhentai/nhentai/constant"
 	"nhentai/nhentai/database/active"
+	"os"
 	"path"
 	"sync"
 	"time"
@@ -40,7 +41,17 @@ func downloadHasStop() bool {
 
 // 删除第一个需要删除的漫画, 成功删除返回true
 func downloadDelete() bool {
-	// TODO
+	needDelete := active.LoadFirstNeedDelete()
+	if needDelete != nil {
+		relativeFolder := fmt.Sprintf("%d/%d", needDelete.ID, needDelete.MediaId)
+		absoluteFolder := path.Join(downloadPath, relativeFolder)
+		err := os.RemoveAll(absoluteFolder)
+		if err != nil {
+			panic(err)
+		}
+		active.DeletedComic(needDelete.ID)
+		return true
+	}
 	return false
 }
 

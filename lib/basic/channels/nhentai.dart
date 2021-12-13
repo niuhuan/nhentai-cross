@@ -167,9 +167,13 @@ class NHentai {
         .cast<DownloadComicInfo>();
   }
 
+  /// 删除一个下载
+  Future<dynamic> downloadSetDelete(int comicId) async {
+    return _flatInvoke("downloadSetDelete", "$comicId");
+  }
+
   /// HTTP-GET-STRING
   Future<String> httpGet(String url) async {
     return await _flatInvoke("httpGet", url);
   }
-
 }

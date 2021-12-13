@@ -1,6 +1,7 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
+import 'package:nhentai/basic/common/common.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/components/actions.dart';
 import 'package:nhentai/screens/components/content_builder.dart';
@@ -69,6 +70,26 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
           },
         ));
       },
+      onLongPress: () async {
+        if (item.downloadStatus == 4) return;
+        var action = await chooseMapDialog(
+          context,
+          {
+            AppLocalizations.of(context)!.delete: 1,
+          },
+          AppLocalizations.of(context)!.chooseAction,
+        );
+        if (action != null) {
+          switch (action) {
+            case 1:
+              setState(() {
+                item.downloadStatus = 3;
+              });
+              await nHentai.downloadSetDelete(item.id);
+              break;
+          }
+        }
+      },
       child: Card(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -85,6 +106,7 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
                     url:
                         "https://t2.nhentai.net/galleries/${item.mediaId}/thumb.jpg",
                     size: Size(width, height),
+                    disablePreview: true,
                   ),
                   _buildDownloadStatus(item.downloadStatus),
                 ],

@@ -38,5 +38,7 @@
   "nextTime": "Next time",
   "aWeek": "A week",
   "aMonth": "A month",
-  "aYear": "A year"
+  "aYear": "A year",
+  "delete": "Delete",
+  "deleting": "Deleting"
 }

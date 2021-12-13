@@ -20,12 +20,14 @@ class RemoteImage extends StatefulWidget {
   final String url;
   final Size size;
   final BoxFit fit;
+  final bool disablePreview;
 
   const RemoteImage({
     Key? key,
     required this.url,
     required this.size,
     this.fit = BoxFit.cover,
+    this.disablePreview = false,
   }) : super(key: key);
 
   @override
@@ -43,12 +45,15 @@ class _RemoteImageState extends State<RemoteImage> {
       widget.size.height,
       fit: widget.fit,
       context: context,
+      disablePreview: widget.disablePreview,
     );
   }
 }
 
 Widget pathFutureImage(Future<String> future, double? width, double? height,
-    {BoxFit fit = BoxFit.cover, BuildContext? context}) {
+    {required BuildContext context,
+    BoxFit fit = BoxFit.cover,
+    bool disablePreview = false}) {
   return FutureBuilder(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -66,13 +71,14 @@ Widget pathFutureImage(Future<String> future, double? width, double? height,
           height,
           fit: fit,
           context: context,
+          disablePreview: disablePreview,
         );
       });
 }
 
 Widget buildError(double? width, double? height) {
   return Image(
-    image: AssetImage('lib/assets/error.png'),
+    image: const AssetImage('lib/assets/error.png'),
     width: width,
     height: height,
   );
@@ -97,7 +103,9 @@ Widget buildLoading(double? width, double? height) {
 }
 
 Widget buildFile(String file, double? width, double? height,
-    {BoxFit fit = BoxFit.cover, BuildContext? context}) {
+    {required BuildContext context,
+    BoxFit fit = BoxFit.cover,
+    bool disablePreview = false}) {
   var image = Image(
     image: FileImage(File(file)),
     width: width,
@@ -109,7 +117,7 @@ Widget buildFile(String file, double? width, double? height,
     },
     fit: fit,
   );
-  if (context == null) return image;
+  if (disablePreview) return image;
   return GestureDetector(
     onLongPress: () async {
       final previewImageText = AppLocalizations.of(context)!.previewImage;
