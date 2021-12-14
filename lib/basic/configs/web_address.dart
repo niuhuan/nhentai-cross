@@ -14,28 +14,35 @@ Future<void> initWebAddressConfig() async {
 Widget webAddressSetting() {
   return StatefulBuilder(
     builder: (BuildContext context, void Function(void Function()) setState) {
-      var none = AppLocalizations.of(context)!.none;
-      Map<String, String> map = {};
-      map[none] = "";
-      for (var element in _availableWebAddresses) {
-        map[element] = element;
-      }
       return ListTile(
         title: Text(AppLocalizations.of(context)!.webAddress),
-        subtitle: Text(_webAddress == "" ? none : _webAddress),
+        subtitle: Text(currentWebAddressName(context)),
         onTap: () async {
-          var result = await chooseMapDialog<String>(
-            context,
-            map,
-            AppLocalizations.of(context)!.chooseWebAddress,
-          );
-          if (result != null) {
-            nHentai.setWebAddress(result);
-            _webAddress = result;
-          }
+          await chooseWebAddress(context);
           setState(() {});
         },
       );
     },
   );
 }
+
+Future chooseWebAddress(BuildContext context) async {
+  var none = AppLocalizations.of(context)!.none;
+  Map<String, String> map = {};
+  map[none] = "";
+  for (var element in _availableWebAddresses) {
+    map[element] = element;
+  }
+  var result = await chooseMapDialog<String>(
+    context,
+    map,
+    AppLocalizations.of(context)!.chooseWebAddress,
+  );
+  if (result != null) {
+    nHentai.setWebAddress(result);
+    _webAddress = result;
+  }
+}
+
+String currentWebAddressName(BuildContext context) =>
+    _webAddress == "" ? AppLocalizations.of(context)!.none : _webAddress;

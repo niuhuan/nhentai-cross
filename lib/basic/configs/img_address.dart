@@ -14,28 +14,35 @@ Future<void> initImgAddressConfig() async {
 Widget imgAddressSetting() {
   return StatefulBuilder(
     builder: (BuildContext context, void Function(void Function()) setState) {
-      var none = AppLocalizations.of(context)!.none;
-      Map<String, String> map = {};
-      map[none] = "";
-      for (var element in _availableImgAddresses) {
-        map[element] = element;
-      }
       return ListTile(
         title: Text(AppLocalizations.of(context)!.imgAddress),
-        subtitle: Text(_imgAddress == "" ? none : _imgAddress),
+        subtitle: Text(currentImgAddressName(context)),
         onTap: () async {
-          var result = await chooseMapDialog<String>(
-            context,
-            map,
-            AppLocalizations.of(context)!.chooseImgAddress,
-          );
-          if (result != null) {
-            nHentai.setImgAddress(result);
-            _imgAddress = result;
-          }
+          await chooseImgAddress(context);
           setState(() {});
         },
       );
     },
   );
 }
+
+Future chooseImgAddress(BuildContext context) async {
+  var none = AppLocalizations.of(context)!.none;
+  Map<String, String> map = {};
+  map[none] = "";
+  for (var element in _availableImgAddresses) {
+    map[element] = element;
+  }
+  var result = await chooseMapDialog<String>(
+    context,
+    map,
+    AppLocalizations.of(context)!.chooseImgAddress,
+  );
+  if (result != null) {
+    nHentai.setImgAddress(result);
+    _imgAddress = result;
+  }
+}
+
+String currentImgAddressName(BuildContext context) =>
+    _imgAddress == "" ? AppLocalizations.of(context)!.none : _imgAddress;

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
+import 'package:nhentai/basic/configs/img_address.dart';
 import 'package:nhentai/basic/configs/reader_direction.dart';
 import 'package:nhentai/basic/configs/reader_type.dart';
+import 'package:nhentai/basic/configs/web_address.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/components/content_loading.dart';
 import 'package:nhentai/screens/components/images.dart';
@@ -135,8 +137,6 @@ abstract class _ComicReaderState extends State<_ComicReader> {
       });
     }
   }
-
-  late Future _future;
 
   @override
   void initState() {
@@ -319,6 +319,22 @@ class _SettingPanelState extends State<_SettingPanel> {
               title: readerTypeName(currentReaderType(), context),
               onPressed: () async {
                 await chooseReaderType(context);
+                setState(() {});
+              },
+            ),
+            _bottomIcon(
+              icon: Icons.shuffle,
+              title: currentWebAddressName(context),
+              onPressed: () async {
+                await chooseWebAddress(context);
+                setState(() {});
+              },
+            ),
+            _bottomIcon(
+              icon: Icons.repeat_one,
+              title: currentImgAddressName(context),
+              onPressed: () async {
+                await chooseImgAddress(context);
                 setState(() {});
               },
             ),
