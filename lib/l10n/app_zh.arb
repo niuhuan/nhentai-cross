@@ -18,6 +18,7 @@
   "no": "否",
   "ok": "确认",
   "cancel": "取消",
+  "addFilter": "增加过滤条件",
   "exclusion": "排除",
   "type": "类型",
   "content": "内容",

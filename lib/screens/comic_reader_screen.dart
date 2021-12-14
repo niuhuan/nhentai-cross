@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:another_xlider/another_xlider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
+import 'package:nhentai/basic/configs/reader_direction.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/components/content_loading.dart';
 import 'package:nhentai/screens/components/images.dart';
@@ -42,18 +45,29 @@ class _ComicReaderScreenState extends State<ComicReaderScreen> {
         }
         return Scaffold(
           backgroundColor: Colors.black,
-          body: _ComicReader(widget.comicInfo),
+          body: _ComicReader(
+            widget.comicInfo,
+            reload: _reload,
+          ),
         );
       },
     );
+  }
+
+  Future _reload() async {
+    setState(() {
+      _future = Future.delayed(const Duration(), () {});
+    });
   }
 }
 
 class _ComicReader extends StatefulWidget {
   final ComicInfo comicInfo;
+  final FutureOr Function() reload;
 
   const _ComicReader(
     this.comicInfo, {
+    required this.reload,
     Key? key,
   }) : super(key: key);
 
@@ -62,6 +76,8 @@ class _ComicReader extends StatefulWidget {
 }
 
 abstract class _ComicReaderState extends State<_ComicReader> {
+  late final ReaderDirection _direction = currentReaderDirection();
+
   Widget _buildViewer();
 
   _needJumpTo(int pageIndex, bool animation);
@@ -244,7 +260,21 @@ abstract class _ComicReaderState extends State<_ComicReader> {
   }
 
   //
-  _onMoreSetting() async {}
+  _onMoreSetting() async {
+    await showMaterialModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xAA000000),
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: _SettingPanel(),
+        );
+      },
+    );
+    if (_direction != currentReaderDirection()) {
+      widget.reload();
+    }
+  }
 
   //
   double _appBarHeight() {
@@ -256,9 +286,74 @@ abstract class _ComicReaderState extends State<_ComicReader> {
   }
 }
 
+class _SettingPanel extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _SettingPanelState();
+}
+
+class _SettingPanelState extends State<_SettingPanel> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Row(
+          children: [
+            _bottomIcon(
+              icon: Icons.crop_sharp,
+              title: currentReaderDirection().toString(),
+              onPressed: () async {
+                await chooseReaderDirection(context);
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _bottomIcon({
+    required IconData icon,
+    required String title,
+    required void Function() onPressed,
+  }) {
+    return Expanded(
+      child: Center(
+        child: Column(
+          children: [
+            IconButton(
+              iconSize: 55,
+              icon: Column(
+                children: [
+                  Container(height: 3),
+                  Icon(
+                    icon,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                  Container(height: 3),
+                  Text(
+                    title,
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(height: 3),
+                ],
+              ),
+              onPressed: onPressed,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ComicReaderWebToonState extends _ComicReaderState {
   ScrollController? _controller;
   List<double> _offsets = [];
+  List<Size> _sizes = [];
 
   @override
   void dispose() {
@@ -270,26 +365,59 @@ class _ComicReaderWebToonState extends _ComicReaderState {
   Widget _buildViewer() {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        _offsets = widget.comicInfo.images.pages
-            .map((e) => constraints.maxWidth * e.h / e.w)
-            .toList()
-            .cast<double>();
+        if (_direction == ReaderDirection.topBottom) {
+          _offsets = widget.comicInfo.images.pages
+              .map((e) => constraints.maxWidth * e.h / e.w)
+              .toList()
+              .cast<double>();
+        } else {
+          final height = constraints.maxHeight -
+              super._appBarHeight() -
+              (_fullScreen ? super._appBarHeight() : super._bottomBarHeight());
+          _offsets = widget.comicInfo.images.pages
+              .map((e) => height * e.w / e.h)
+              .toList()
+              .cast<double>();
+        }
+        if (_direction == ReaderDirection.topBottom) {
+          _sizes = widget.comicInfo.images.pages
+              .map((e) =>
+                  Size(constraints.maxWidth, constraints.maxWidth * e.h / e.w))
+              .toList()
+              .cast<Size>();
+        } else {
+          final height = constraints.maxHeight -
+              super._appBarHeight() -
+              (_fullScreen ? super._appBarHeight() : super._bottomBarHeight());
+          _sizes = widget.comicInfo.images.pages
+              .map((e) => Size(height * e.w / e.h, height))
+              .toList()
+              .cast<Size>();
+        }
         if (_controller == null) {
           _controller = ScrollController(initialScrollOffset: _initOffset());
           _controller!.addListener(_onScroll);
         }
         return ListView.builder(
+          scrollDirection: _direction == ReaderDirection.topBottom
+              ? Axis.vertical
+              : Axis.horizontal,
+          reverse: _direction == ReaderDirection.rightLeft,
           controller: _controller,
-          padding: EdgeInsets.only(top: super._appBarHeight(), bottom: 130),
+          padding: EdgeInsets.only(
+            top: super._appBarHeight(),
+            bottom: _direction == ReaderDirection.topBottom
+                ? 130
+                : (_fullScreen
+                    ? super._appBarHeight()
+                    : super._bottomBarHeight()),
+          ),
           itemCount: widget.comicInfo.images.pages.length,
           itemBuilder: (BuildContext context, int index) {
-            var page = widget.comicInfo.images.pages[index];
-            return ScaleNHentaiImage(
+            return NHentaiImage(
               url: pageImageUrl(widget.comicInfo.mediaId, index + 1),
-              originSize: Size(
-                page.w.toDouble(),
-                page.h.toDouble(),
-              ),
+              size: _sizes[index],
+              fit: BoxFit.contain,
             );
           },
         );

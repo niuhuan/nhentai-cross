@@ -151,7 +151,7 @@ class _PageState extends State<Pager> {
       child: Card(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return ScaleNHentaiImage(
+            return HorizontalStretchNHentaiImage(
               url: item.thumb,
               originSize: Size(
                 item.thumbWidth.toDouble(),

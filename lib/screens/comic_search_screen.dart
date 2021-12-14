@@ -136,7 +136,7 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('增加过滤条件'),
+                        title: Text(AppLocalizations.of(context)!.addFilter),
                         content: SizedBox(
                           width: double.minPositive,
                           height: MediaQuery.of(context).size.height / 2,
@@ -170,7 +170,7 @@ class _ComicSearchScreenState extends State<ComicSearchScreen> {
                   });
                 }
               },
-              child: const Text("增加过滤条件"),
+              child: Text(AppLocalizations.of(context)!.addFilter),
             ),
           ),
         ],

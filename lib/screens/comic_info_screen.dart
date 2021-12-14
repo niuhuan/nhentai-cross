@@ -141,7 +141,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
                   width: imageWidth,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                    child: ScaleNHentaiImage(
+                    child: HorizontalStretchNHentaiImage(
                       url: coverImageUrl(item.mediaId),
                       originSize: Size(
                         item.images.cover.w.toDouble(),

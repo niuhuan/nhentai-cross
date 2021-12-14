@@ -102,7 +102,7 @@ class _ComicDownloadsScreenState extends State<ComicDownloadsScreen> {
               height: height,
               child: Stack(
                 children: [
-                  RemoteImage(
+                  NHentaiImage(
                     url:
                         "https://t2.nhentai.net/galleries/${item.mediaId}/thumb.jpg",
                     size: Size(width, height),

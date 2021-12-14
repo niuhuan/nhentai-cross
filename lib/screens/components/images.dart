@@ -16,13 +16,13 @@ String pageImageUrl(int mediaId, int num) {
   return "https://i.nhentai.net/galleries/$mediaId/$num.${"jpg"}";
 }
 
-class RemoteImage extends StatefulWidget {
+class NHentaiImage extends StatefulWidget {
   final String url;
   final Size size;
   final BoxFit fit;
   final bool disablePreview;
 
-  const RemoteImage({
+  const NHentaiImage({
     Key? key,
     required this.url,
     required this.size,
@@ -31,10 +31,10 @@ class RemoteImage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RemoteImageState();
+  State<StatefulWidget> createState() => _NHentaiImageState();
 }
 
-class _RemoteImageState extends State<RemoteImage> {
+class _NHentaiImageState extends State<NHentaiImage> {
   late final Future<String> _future = nHentai.cacheImageByUrlPath(widget.url);
 
   @override
@@ -146,11 +146,11 @@ Widget buildFile(String file, double? width, double? height,
   );
 }
 
-class ScaleNHentaiImage extends StatelessWidget {
+class HorizontalStretchNHentaiImage extends StatelessWidget {
   final String url;
   final Size originSize;
 
-  const ScaleNHentaiImage(
+  const HorizontalStretchNHentaiImage(
       {required this.url, required this.originSize, Key? key})
       : super(key: key);
 
@@ -161,7 +161,7 @@ class ScaleNHentaiImage extends StatelessWidget {
         var width = constraints.maxWidth;
         var height =
             constraints.maxWidth * originSize.height / originSize.width;
-        return RemoteImage(url: url, size: Size(width, height));
+        return NHentaiImage(url: url, size: Size(width, height));
       },
     );
   }
