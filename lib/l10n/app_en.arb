@@ -41,5 +41,12 @@
   "aMonth": "A month",
   "aYear": "A year",
   "delete": "Delete",
-  "deleting": "Deleting"
+  "deleting": "Deleting",
+  "chooseReaderDirection": "Choose reader direction",
+  "topToBottom": "Top to bottom",
+  "leftToRight": "Left to right",
+  "rightToLeft": "Right to left",
+  "chooseReaderType": "Choose reader type",
+  "webtoon": "WebToon",
+  "gallery": "Gallery"
 }

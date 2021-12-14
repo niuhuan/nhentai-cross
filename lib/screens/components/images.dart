@@ -1,12 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/basic/common/common.dart';
 import 'package:nhentai/basic/common/cross.dart';
 
 import '../file_photo_view_screen.dart';
+import 'dart:ui' as ui show Codec;
 
 String coverImageUrl(int mediaId) {
   return "https://t.nhentai.net/galleries/$mediaId/cover.${"jpg"}";
@@ -14,6 +15,33 @@ String coverImageUrl(int mediaId) {
 
 String pageImageUrl(int mediaId, int num) {
   return "https://i.nhentai.net/galleries/$mediaId/$num.${"jpg"}";
+}
+
+class NHentaiImageProvider extends ImageProvider<NHentaiImageProvider> {
+  final String url;
+  final double scale;
+
+  NHentaiImageProvider(this.url, {this.scale = 1.0});
+
+  @override
+  ImageStreamCompleter load(key, DecoderCallback decode) {
+    return MultiFrameImageStreamCompleter(
+      codec: _loadAsync(key),
+      scale: key.scale,
+    );
+  }
+
+  @override
+  Future<NHentaiImageProvider> obtainKey(ImageConfiguration configuration) {
+    return SynchronousFuture<NHentaiImageProvider>(this);
+  }
+
+  Future<ui.Codec> _loadAsync(NHentaiImageProvider key) async {
+    assert(key == this);
+    var path = await nHentai.cacheImageByUrlPath(url);
+    var data = await File(path).readAsBytes();
+    return PaintingBinding.instance!.instantiateImageCodec(data);
+  }
 }
 
 class NHentaiImage extends StatefulWidget {
