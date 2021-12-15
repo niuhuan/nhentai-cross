@@ -523,8 +523,10 @@ class _ComicReaderGalleryState extends _ComicReaderState {
       pageController: _pageController,
       onPageChanged: _onGalleryPageChange,
       itemCount: widget.comicInfo.images.pages.length,
+      allowImplicitScrolling: true,
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
+          filterQuality: FilterQuality.high,
           imageProvider: NHentaiImageProvider(
               pageImageUrl(widget.comicInfo.mediaId, index + 1)),
           errorBuilder: (b, e, s) {
