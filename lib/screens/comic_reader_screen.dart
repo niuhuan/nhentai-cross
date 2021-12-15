@@ -16,8 +16,6 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 import 'components/content_error.dart';
 
-// ignore_for_file: no_logic_in_create_state
-
 class ComicReaderScreen extends StatefulWidget {
   final ComicInfo comicInfo;
 
@@ -99,6 +97,7 @@ class _ComicReader extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() {
     switch (readerType) {
       case ReaderType.webtoon:
