@@ -102,7 +102,6 @@ class _PinkTheme extends _ThemePackage {
         ),
         dividerColor: Colors.grey.shade200,
         primaryColor: Colors.pink.shade200,
-        highlightColor: Colors.pink.shade200,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.pink.shade200,
           selectionColor: Colors.pink.shade300.withAlpha(150),
@@ -144,7 +143,6 @@ class _BlackTheme extends _ThemePackage {
         ),
         dividerColor: Colors.grey.shade200,
         primaryColor: Colors.pink.shade200,
-        highlightColor: Colors.pink.shade200,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.pink.shade200,
           selectionColor: Colors.pink.shade300.withAlpha(150),
@@ -185,7 +183,6 @@ class _DarkTheme extends _ThemePackage {
           backgroundColor: Colors.grey.shade900,
         ),
         primaryColor: Colors.pink.shade200,
-        highlightColor: Colors.pink.shade200,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.pink.shade200,
           selectionColor: Colors.pink.shade300.withAlpha(150),
@@ -230,7 +227,6 @@ class _DustyBlueTheme extends _ThemePackage {
         ),
         dividerColor: Colors.grey.shade800,
         primaryColor: Colors.blue.shade200,
-        highlightColor: Colors.blue.shade200,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.blue.shade200,
           selectionColor: Colors.blue.shade900,
