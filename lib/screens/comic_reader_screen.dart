@@ -10,7 +10,6 @@ import 'package:nhentai/basic/configs/reader_direction.dart';
 import 'package:nhentai/basic/configs/reader_type.dart';
 import 'package:nhentai/basic/configs/web_address.dart';
 import 'package:nhentai/basic/entities/entities.dart';
-import 'package:nhentai/screens/components/content_loading.dart';
 import 'package:nhentai/screens/components/images.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 

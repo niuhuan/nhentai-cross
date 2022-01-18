@@ -2,6 +2,7 @@ import 'package:event/event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nhentai/screens/components/mouse_and_touch_scroll_behavior.dart';
 import 'package:nhentai/screens/init_screen.dart';
 
 import 'basic/configs/themes.dart';
@@ -37,6 +38,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: mouseAndTouchScrollBehavior,
       debugShowCheckedModeBanner: false,
       theme: currentThemeData(),
       darkTheme: currentDarkTheme(),
