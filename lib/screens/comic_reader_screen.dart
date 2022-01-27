@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:another_xlider/another_xlider.dart';
+import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -12,8 +13,6 @@ import 'package:nhentai/basic/configs/web_address.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/components/images.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
-import 'components/content_error.dart';
 
 class ComicReaderScreen extends StatefulWidget {
   final ComicInfo comicInfo;
@@ -64,7 +63,7 @@ class _ComicReaderScreenState extends State<ComicReaderScreen> {
             appBar: AppBar(),
           );
         }
-        return Scaffold(
+        final screen = Scaffold(
           backgroundColor: Colors.black,
           body: _ComicReader(
             widget.comicInfo,
@@ -74,6 +73,7 @@ class _ComicReaderScreenState extends State<ComicReaderScreen> {
             startIndex: _startIndex,
           ),
         );
+        return readerKeyboardHolder(screen);
       },
     );
   }
@@ -141,15 +141,35 @@ abstract class _ComicReaderState extends State<_ComicReader> {
     _fullScreen = false;
     _current = widget.startIndex;
     _slider = widget.startIndex;
+    _readerControllerEvent.subscribe(_onPageControl);
     super.initState();
   }
 
   @override
   void dispose() {
+    _readerControllerEvent.unsubscribe(_onPageControl);
     if (Platform.isAndroid || Platform.isIOS) {
       SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     }
     super.dispose();
+  }
+
+  void _onPageControl(_ReaderControllerEventArgs? args) {
+    if (args != null) {
+      var event = args.key;
+      switch (event) {
+        case "UP":
+          if (_current > 0) {
+            _needJumpTo(_current - 1, true);
+          }
+          break;
+        case "DOWN":
+          if (_current < widget.comicInfo.images.pages.length - 1) {
+            _needJumpTo(_current + 1, true);
+          }
+          break;
+      }
+    }
   }
 
   @override
@@ -493,10 +513,18 @@ class _ComicReaderWebToonState extends _ComicReaderState {
   _needJumpTo(int pageIndex, bool animation) {
     if (_offsets.length > pageIndex) {
       double off = 0;
-      for (int i = 0; i < pageIndex - 1; i++) {
+      for (int i = 0; i < pageIndex; i++) {
         off += _offsets[i];
       }
-      _controller?.jumpTo(off);
+      if (animation) {
+        _controller?.animateTo(
+          off,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.ease,
+        );
+      } else {
+        _controller?.jumpTo(off);
+      }
     }
   }
 }
@@ -582,3 +610,68 @@ class _ComicReaderGalleryState extends _ComicReaderState {
     super._onCurrentChange(to);
   }
 }
+
+////////////////////////////////
+
+// 仅支持安卓
+// 监听后会拦截安卓手机音量键
+// 仅最后一次监听生效
+// event可能为DOWN/UP
+Event<_ReaderControllerEventArgs> _readerControllerEvent =
+    Event<_ReaderControllerEventArgs>();
+
+class _ReaderControllerEventArgs extends EventArgs {
+  final String key;
+
+  _ReaderControllerEventArgs(this.key);
+}
+
+const _listVolume = false;
+
+var _volumeListenCount = 0;
+
+void _onVolumeEvent(dynamic args) {
+  _readerControllerEvent.broadcast(_ReaderControllerEventArgs("$args"));
+}
+
+EventChannel volumeButtonChannel = const EventChannel("volume_button");
+StreamSubscription? volumeS;
+
+void addVolumeListen() {
+  _volumeListenCount++;
+  if (_volumeListenCount == 1) {
+    volumeS =
+        volumeButtonChannel.receiveBroadcastStream().listen(_onVolumeEvent);
+  }
+}
+
+void delVolumeListen() {
+  _volumeListenCount--;
+  if (_volumeListenCount == 0) {
+    volumeS?.cancel();
+  }
+}
+
+Widget readerKeyboardHolder(Widget widget) {
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    widget = RawKeyboardListener(
+      focusNode: FocusNode(),
+      child: widget,
+      autofocus: true,
+      onKey: (event) {
+        if (event is RawKeyDownEvent) {
+          if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+            _readerControllerEvent.broadcast(_ReaderControllerEventArgs("UP"));
+          }
+          if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+            _readerControllerEvent
+                .broadcast(_ReaderControllerEventArgs("DOWN"));
+          }
+        }
+      },
+    );
+  }
+  return widget;
+}
+
+////////////////////////////////

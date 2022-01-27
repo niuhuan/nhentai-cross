@@ -1,1 +1,1 @@
-gomobile bind -target=ios/arm64 -o lib/Mobile.xcframework ./
+gomobile bind -target=ios -o lib/Mobile.xcframework ./
