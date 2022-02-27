@@ -1,8 +1,14 @@
 package nhentai
 
 import (
+	"bytes"
 	"encoding/json"
+	"image"
+	"image/jpeg"
+	"io/ioutil"
 	"nhentai/nhentai/database/cache"
+	"os"
+	"path"
 	"time"
 )
 
@@ -66,4 +72,31 @@ func serialize(point interface{}, err error) (string, error) {
 	}
 	buff, err := json.Marshal(point)
 	return string(buff), nil
+}
+
+func convertImageToJPEG100(params string) (string, error) {
+	var paramsStruct struct {
+		Path string `json:"path"`
+		Dir  string `json:"dir"`
+	}
+	err := json.Unmarshal([]byte(params), &paramsStruct)
+	if err != nil {
+		return "", err
+	}
+	buff, err := ioutil.ReadFile(paramsStruct.Path)
+	if err != nil {
+		return "", err
+	}
+	reader := bytes.NewReader(buff)
+	i, _, err := image.Decode(reader)
+	if err != nil {
+		return "", err
+	}
+	to := path.Join(paramsStruct.Dir, path.Base(paramsStruct.Path)+".jpg")
+	stream, err := os.Create(to)
+	if err != nil {
+		return "", err
+	}
+	defer stream.Close()
+	return "", jpeg.Encode(stream, i, &jpeg.Options{Quality: 100})
 }

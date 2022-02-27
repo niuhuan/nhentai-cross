@@ -63,6 +63,7 @@ var methods = map[string]func(string) (string, error){
 	"listDownloadComicInfo":      listDownloadComicInfo,
 	"downloadSetDelete":          downloadSetDelete,
 	"httpGet":                    httpGet,
+	"convertImageToJPEG100":      convertImageToJPEG100,
 }
 
 func FlatInvoke(method string, params string) (string, error) {

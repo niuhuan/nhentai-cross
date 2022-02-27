@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:nhentai/basic/entities/entities.dart';
@@ -101,17 +102,24 @@ class NHentai {
 
   /// 手机端保存图片
   Future saveFileToImage(String path) async {
-    //todo
+    return _channel.invokeMethod("saveFileToImage", {
+      "path": path,
+    });
   }
 
   /// 桌面端保存图片
   Future convertImageToJPEG100(String path, String folder) async {
-    //todo
+    return _channel.invokeMethod("convertImageToJPEG100", {
+      "path": path,
+      "folder": folder,
+    });
   }
 
   /// 安卓版本号
   Future<int> androidVersion() async {
-    //todo
+    if (Platform.isAndroid) {
+      return await _channel.invokeMethod("androidVersion", {});
+    }
     return 0;
   }
 
