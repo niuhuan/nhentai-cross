@@ -108,10 +108,10 @@ class NHentai {
   }
 
   /// 桌面端保存图片
-  Future convertImageToJPEG100(String path, String folder) async {
-    return _channel.invokeMethod("convertImageToJPEG100", {
+  Future convertImageToJPEG100(String path, String dir) async {
+    return _flatInvoke("convertImageToJPEG100", {
       "path": path,
-      "folder": folder,
+      "dir": dir,
     });
   }
 
