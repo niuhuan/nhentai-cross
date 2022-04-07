@@ -45,7 +45,7 @@ func main() {
 		panic(nil)
 	}
 	getReleaseRequest.Header.Set("User-Agent", ua)
-	getReleaseRequest.Header.Set("Authorization", ghToken)
+	getReleaseRequest.Header.Set("Authorization", "token "+ghToken)
 	getReleaseResponse, err := http.DefaultClient.Do(getReleaseRequest)
 	if err != nil {
 		panic(nil)
@@ -70,7 +70,7 @@ func main() {
 			panic(nil)
 		}
 		createReleaseRequest.Header.Set("User-Agent", ua)
-		createReleaseRequest.Header.Set("Authorization", ghToken)
+		createReleaseRequest.Header.Set("Authorization", "token "+ghToken)
 		var createReleaseResponse *http.Response
 		createReleaseResponse, err = http.DefaultClient.Do(createReleaseRequest)
 		if err != nil {
