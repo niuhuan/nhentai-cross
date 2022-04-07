@@ -36,7 +36,7 @@ func main() {
 	version.Info = strings.TrimSpace(string(infoFile))
 	// get target
 	target := os.Getenv("TARGET")
-	if ghToken == "" {
+	if target == "" {
 		println("Env ${TARGET} is not set")
 		os.Exit(1)
 	}
@@ -91,7 +91,7 @@ func main() {
 		panic(err)
 	}
 	getReleaseRequest.Header.Set("User-Agent", ua)
-	getReleaseRequest.Header.Set("Authorization", ghToken)
+	getReleaseRequest.Header.Set("Authorization", "token "+ghToken)
 	getReleaseResponse, err := http.DefaultClient.Do(getReleaseRequest)
 	if err != nil {
 		panic(err)
@@ -121,7 +121,7 @@ func main() {
 		panic(err)
 	}
 	uploadRequest.Header.Set("User-Agent", ua)
-	uploadRequest.Header.Set("Authorization", ghToken)
+	uploadRequest.Header.Set("Authorization", "token "+ghToken)
 	uploadRequest.Header.Set("Content-Type", contentType)
 	uploadRequest.ContentLength = contentLength
 	uploadResponse, err := http.DefaultClient.Do(uploadRequest)
