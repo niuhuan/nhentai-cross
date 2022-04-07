@@ -2,9 +2,9 @@
 
 ## 简体中文 | [English](README-en.md)
 
-[![license](https://img.shields.io/github/license/niuhuan/nhentai-cross)](https://raw.githubusercontent.com/niuhuan/pikapika/master/LICENSE)
-[![releases](https://img.shields.io/github/v/release/niuhuan/nhentai-cross)](https://github.com/niuhuan/pikapika/releases)
-[![downloads](https://img.shields.io/github/downloads/niuhuan/nhentai-cross/total)](https://github.com/niuhuan/pikapika/releases)
+[![license](https://img.shields.io/github/license/niuhuan/nhentai-cross)](https://raw.githubusercontent.com/niuhuan/nhentai-cross/master/LICENSE)
+[![releases](https://img.shields.io/github/v/release/niuhuan/nhentai-cross)](https://github.com/niuhuan/nhentai-cross/releases)
+[![downloads](https://img.shields.io/github/downloads/niuhuan/nhentai-cross/total)](https://github.com/niuhuan/nhentai-cross/releases)
 
 一个美观且跨平台的*NHentai客户端*，支持桌面端与移动端(Mac/Windows/Linux/Android/IOS)。
 
