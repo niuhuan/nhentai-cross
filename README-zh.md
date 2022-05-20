@@ -14,6 +14,11 @@
 
 仓库地址 [https://github.com/niuhuan/nhentai-cross](https://github.com/niuhuan/nhentai-cross)
 
+## 使用前必读
+
+- 根据地区的不同DNS拦截器不一定有效, 请使用科学上网测试本软件的可用性
+- 由于官方网站使用了反DDOS攻击, 如果漫画列表拉取失败, 请过5秒之后重试
+
 ## 软件截图
 
 #### 漫画列表

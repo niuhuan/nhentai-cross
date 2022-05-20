@@ -381,7 +381,7 @@ Future<dynamic> chooseTheme(BuildContext buildContext) async {
               title: Text(AppLocalizations.of(context)!.chooseTheme),
               children: list,
             );
-          })
+          });
     },
   );
   if (theme != null) {
