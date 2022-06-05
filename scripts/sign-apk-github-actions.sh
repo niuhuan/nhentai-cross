@@ -1,4 +1,3 @@
-
 cd "$( cd "$( dirname "$0"  )" && pwd  )/.."
 
 echo $KEY_FILE_BASE64 > key.jks.base64

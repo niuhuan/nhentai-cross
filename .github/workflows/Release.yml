@@ -169,6 +169,7 @@ jobs:
       - name: Build (ios)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'
         run: |
+          /usr/libexec/PlistBuddy -c 'Add :application-identifier string niuhuan.nhentai' ios/Runner/Info.plist
           sh scripts/build-ipa.sh
 
       - name: Build (android-arm32)
