@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
 import 'package:nhentai/screens/comic_search_screen.dart';
 import 'package:nhentai/screens/components/pager.dart';
+import 'package:nhentai/screens/webview_screen.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'comic_downloads_screen.dart';
 import 'components/actions.dart';
@@ -35,6 +39,18 @@ class _ComicsScreenState extends State<ComicsScreen> {
               : widget.searchStruct.dumpSearchString(),
         ),
         actions: [
+          ...Platform.isAndroid || Platform.isIOS
+              ? [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return const WebViewScreen();
+                        }));
+                      },
+                      icon: const Icon(Icons.wb_auto)),
+                ]
+              : [],
           IconButton(
             onPressed: () async {
               ComicSearchStruct? struct = await Navigator.of(context).push(

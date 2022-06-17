@@ -184,4 +184,12 @@ class NHentai {
   Future<String> httpGet(String url) async {
     return await _flatInvoke("httpGet", url);
   }
+
+  Future setCookie(String cookies) async {
+    return await _flatInvoke("setCookie", cookies);
+  }
+
+  Future setUserAgent(String s) async {
+    return await _flatInvoke("setUserAgent", s);
+  }
 }

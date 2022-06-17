@@ -64,6 +64,18 @@ var methods = map[string]func(string) (string, error){
 	"downloadSetDelete":          downloadSetDelete,
 	"httpGet":                    httpGet,
 	"convertImageToJPEG100":      convertImageToJPEG100,
+	"setCookie": setCookie,
+	"setUserAgent": setUserAgent,
+}
+
+func setUserAgent(s string) (string, error) {
+	client.UserAgent = s
+	return "", nil
+}
+
+func setCookie(s string) (string, error) {
+	client.Cookie = s
+	return "", nil
 }
 
 func FlatInvoke(method string, params string) (string, error) {
