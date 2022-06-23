@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_links/app_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:nhentai/basic/configs/img_address.dart';
@@ -7,6 +10,8 @@ import 'package:nhentai/basic/configs/themes.dart';
 import 'package:nhentai/basic/configs/version.dart';
 import 'package:nhentai/basic/configs/web_address.dart';
 
+import '../basic/common/common.dart';
+import 'comic_info_screen.dart';
 import 'comics_screen.dart';
 
 class InitScreen extends StatefulWidget {
@@ -31,8 +36,35 @@ class _InitScreenState extends State<InitScreen> {
     await initImgAddressConfig();
     await initReaderType();
     await initReaderDirection();
+
+    late Widget gotoScreen;
+    String? initUrl;
+    if (Platform.isAndroid || Platform.isIOS) {
+      try {
+        final appLinks = AppLinks();
+        initUrl = (await appLinks.getInitialAppLink())?.toString();
+        // Use the uri and warn the user, if it is not correct,
+        // but keep in mind it could be `null`.
+      } on FormatException {
+        // Handle exception by warning the user their action did not succeed
+        // return?
+      }
+    }
+    if (initUrl != null) {
+      RegExp regExp = RegExp(r"^https://nhentai\.net/g/(\d+)/$");
+      final matches = regExp.allMatches(initUrl!);
+      if (matches.isNotEmpty) {
+        final id = int.parse(matches.first.group(1)!);
+        gotoScreen = ComicInfoScreen(id, "");
+      } else {
+        gotoScreen = ComicsScreen();
+      }
+    } else {
+      gotoScreen = ComicsScreen();
+    }
+
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (BuildContext context) => ComicsScreen(),
+      builder: (BuildContext context) => gotoScreen,
     ));
   }
 

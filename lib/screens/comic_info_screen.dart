@@ -44,7 +44,15 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.comicTitle),
+        title: FutureBuilder(
+          future: _future,
+          builder: (BuildContext context, AsyncSnapshot<ComicInfo> snapshot) {
+            if (snapshot.hasData) {
+              return Text(snapshot.requireData.title.pretty);
+            }
+            return Text(widget.comicTitle);
+          },
+        ),
         actions: [
           FutureBuilder(
             future: _future,

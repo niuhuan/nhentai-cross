@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:event/event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nhentai/screens/comic_info_screen.dart';
 import 'package:nhentai/screens/components/mouse_and_touch_scroll_behavior.dart';
 import 'package:nhentai/screens/init_screen.dart';
 
+import 'basic/common/common.dart';
 import 'basic/configs/themes.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -19,6 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     themeEvent.subscribe(_onChangeTheme);
