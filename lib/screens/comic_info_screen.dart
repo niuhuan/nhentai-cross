@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:nhentai/screens/comics_screen.dart';
 import 'package:nhentai/screens/components/actions.dart';
 import 'package:nhentai/screens/components/content_builder.dart';
 import 'package:nhentai/screens/components/images.dart';
+import 'package:nhentai/screens/webview_screen.dart';
 
 class ComicInfoScreen extends StatefulWidget {
   final int comicId;
@@ -54,6 +57,18 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
           },
         ),
         actions: [
+          ...(Platform.isAndroid || Platform.isIOS) && widget.comicTitle.isEmpty
+              ? [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return const WebViewScreen();
+                        }));
+                      },
+                      icon: const Icon(Icons.wb_auto)),
+                ]
+              : [],
           FutureBuilder(
             future: _future,
             builder:
