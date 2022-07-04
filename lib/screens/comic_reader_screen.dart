@@ -196,6 +196,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
           ),
         ),
         _fullScreen ? Container() : _buildBottomBar(),
+        _fullScreen ? Container() : _buildEdgePadding(),
       ],
     );
   }
@@ -221,6 +222,16 @@ abstract class _ComicReaderState extends State<_ComicReader> {
         children: [
           Expanded(child: _buildSlider()),
         ],
+      ),
+    );
+  }
+
+  Widget _buildEdgePadding() {
+    return Container(
+      color: const Color(0x88000000),
+      child: SafeArea(
+        top: false,
+        child: Container(),
       ),
     );
   }
