@@ -1,2 +1,2 @@
-- 通过网页加载Cookie, 帮助穿过DDoS防御 (实验性)
-- 可以直接打开 https://nhentai.com/g/12345/ 类似的网址进入详情页(安卓)
+- Cross DDoS (only phone)
+- 通过ddos (仅手机端)

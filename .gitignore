@@ -50,3 +50,4 @@ app.*.map.json
 /go/mobile/lib/*.xcframework/
 
 /lib/assets/version.txt
+desiredFileName.txt

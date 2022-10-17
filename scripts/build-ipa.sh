@@ -4,7 +4,7 @@ cd "$( cd "$( dirname "$0"  )" && pwd  )/.."
 
 cd go/mobile
 go get golang.org/x/mobile/cmd/gobind
-gomobile bind -target=ios -o lib/Mobile.xcframework ./
+gomobile bind -iosversion 11.0 -target=ios -o lib/Mobile.xcframework ./
 cd ../..
 flutter build ios --release --no-codesign
 

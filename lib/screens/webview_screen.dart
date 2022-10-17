@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:nhentai/basic/common/common.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({Key? key}) : super(key: key);
@@ -10,7 +13,14 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  late WebViewController _webViewController;
+  late InAppWebViewController _webViewController;
+  late CookieManager _cookieManager;
+
+  @override
+  void initState() {
+    _cookieManager = CookieManager.instance();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,26 +28,46 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: AppBar(
         title: const Text("Load web cookies"),
         actions: [
-          IconButton(onPressed: () {
-            _webViewController.loadUrl('https://nhentai.net/');
-          }, icon: const Icon(Icons.refresh),),
-          IconButton(onPressed: () async {
-            final cookies = await _webViewController.runJavascriptReturningResult(
-              'document.cookie',
-            );
-            await nHentai.setCookie(cookies);
-            await nHentai.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36');
-            Navigator.of(context).pop();
-          }, icon: const Icon(Icons.check),),
+          IconButton(
+            onPressed: () {
+              _webViewController.loadUrl(
+                  urlRequest:
+                      URLRequest(url: Uri.parse('https://nhentai.net/')));
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: () async {
+              final body = await _webViewController.evaluateJavascript(
+                  source: "navigator.userAgent");
+              await nHentai.setUserAgent(body);
+
+              // var cookies =
+              // await _webViewController.evaluateJavascript(source: "document.cookie");
+              //
+              // if (cookies.startsWith("\"")) {
+              //   cookies = cookies.replaceAll("\"", "");
+              // }
+
+              final cookies = await _cookieManager.getCookies(
+                  url: Uri.parse('https://nhentai.net/'));
+              print(cookies.map((e) => "${e.name}=${e.value}").join("; "));
+              await nHentai.setCookie(
+                  cookies.map((e) => "${e.name}=${e.value}").join("; "));
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.check),
+          ),
         ],
       ),
-      body: WebView(
-        initialUrl: 'https://nhentai.net/',
-        onWebViewCreated: (WebViewController webViewController) {
-          _webViewController = webViewController;
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: Uri.parse('https://nhentai.net/'),
+        ),
+        onLoadStart: (c, url) {
+          print("onLoadStart");
+          _webViewController = c;
         },
-        javascriptMode: JavascriptMode.unrestricted,
-        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
       ),
     );
   }

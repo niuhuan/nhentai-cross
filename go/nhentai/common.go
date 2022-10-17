@@ -32,14 +32,14 @@ import (
 
 func availableWebAddresses(_ string) (string, error) {
 	return serialize([]string{
-		"104.27.194.88:443",
-		"104.27.195.88:443",
+		"104.21.66.123:443",
+		"172.67.159.231:443",
 	}, nil)
 }
 
 func availableImgAddresses(_ string) (string, error) {
 	return serialize([]string{
-		"23.237.126.122:443",
+		"185.107.44.3:443",
 		"185.177.127.78:443",
 		"185.177.127.77:443",
 	}, nil)
