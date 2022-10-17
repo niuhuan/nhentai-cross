@@ -33,6 +33,7 @@
   "failed": "失败",
   "autoCheckNewVersion": "自动检查更新",
   "disabled": "已禁用",
+  "disable": "禁用",
   "enabled": "已开启",
   "enable": "开启",
   "nextTime": "下一次",

@@ -432,9 +432,10 @@ class _ComicReaderWebToonState extends _ComicReaderState {
               .toList()
               .cast<double>();
         } else {
-          final height = constraints.maxHeight -
+          var height = constraints.maxHeight -
               super._appBarHeight() -
-              (_fullScreen ? super._appBarHeight() : super._bottomBarHeight());
+              super._bottomBarHeight() -
+              MediaQuery.of(context).padding.bottom;
           _offsets = widget.comicInfo.images.pages
               .map((e) => height * e.w / e.h)
               .toList()
@@ -447,9 +448,10 @@ class _ComicReaderWebToonState extends _ComicReaderState {
               .toList()
               .cast<Size>();
         } else {
-          final height = constraints.maxHeight -
+          var height = constraints.maxHeight -
               super._appBarHeight() -
-              (_fullScreen ? super._appBarHeight() : super._bottomBarHeight());
+              super._bottomBarHeight() -
+              MediaQuery.of(context).padding.bottom;
           _sizes = widget.comicInfo.images.pages
               .map((e) => Size(height * e.w / e.h, height))
               .toList()
@@ -469,9 +471,8 @@ class _ComicReaderWebToonState extends _ComicReaderState {
             top: super._appBarHeight(),
             bottom: _direction == ReaderDirection.topToBottom
                 ? 130
-                : (_fullScreen
-                    ? super._appBarHeight()
-                    : super._bottomBarHeight()),
+                : (super._bottomBarHeight() +
+                MediaQuery.of(context).padding.bottom)
           ),
           itemCount: widget.comicInfo.images.pages.length,
           itemBuilder: (BuildContext context, int index) {

@@ -11,7 +11,6 @@ A beautiful and cross platform *NHentai Client*. Support desktop and mobile phon
 ## Must readme
 
 The official website uses the page to prevent DDoS attacks.
-If the comic list is not obtained successfully, you need to wait 5 seconds and try again.
 
 ## Captures
 

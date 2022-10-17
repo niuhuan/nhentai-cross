@@ -4,4 +4,4 @@ cd "$( cd "$( dirname "$0"  )" && pwd  )/.."
 
 cd go/mobile
 
-gomobile bind -target=ios -o lib/Mobile.xcframework ./
+gomobile bind -androidapi 19 -target=ios -o lib/Mobile.xcframework ./

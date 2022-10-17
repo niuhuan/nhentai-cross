@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  go_version: '1.16'
+  go_version: '1.17'
   flutter_channel: 'stable'
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -52,20 +52,20 @@ jobs:
             host: windows-latest
             flutter_version: '2.10.3'
           - target: macos
-            host: macos-latest
+            host: macos-11
             flutter_version: '2.10.3'
           - target: ios
-            host: macos-latest
-            flutter_version: '3.0.2'
+            host: macos-11
+            flutter_version: '3.3.4'
           - target: android-arm32
             host: ubuntu-latest
-            flutter_version: '3.0.2'
+            flutter_version: '3.3.4'
           - target: android-arm64
             host: ubuntu-latest
-            flutter_version: '3.0.2'
+            flutter_version: '3.3.4'
           - target: android-x86_64
             host: ubuntu-latest
-            flutter_version: '3.0.2'
+            flutter_version: '3.3.4'
 
     runs-on: ${{ matrix.config.host }}
 
@@ -149,19 +149,11 @@ jobs:
           cp version.code.txt ../lib/assets/version.txt
 
       - name: Upgrade deps version (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host != 'macos-latest' && startsWith(matrix.config.flutter_version, '3')
+        if: steps.check_asset.outputs.skip_build != 'true' && !startsWith(matrix.config.host, 'macos') && startsWith(matrix.config.flutter_version, '3')
         run: |
           sed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
           sed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
           sed -i "s/filesystem_picker: 2.0.0/filesystem_picker: ^2.0.0/g" pubspec.yaml
-
-      - name: Upgrade deps version (iOS)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host == 'macos-latest' && startsWith(matrix.config.flutter_version, '3')
-        run: |
-          brew install gnu-sed
-          gsed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
-          gsed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
-          gsed -i "s/filesystem_picker: 2.0.0/filesystem_picker: ^2.0.0/g" pubspec.yaml
 
       - name: Build (windows)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
