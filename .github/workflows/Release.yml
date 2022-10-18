@@ -52,10 +52,10 @@ jobs:
             host: windows-latest
             flutter_version: '2.10.3'
           - target: macos
-            host: macos-11
+            host: macos-12
             flutter_version: '2.10.3'
           - target: ios
-            host: macos-11
+            host: macos-12
             flutter_version: '3.3.4'
           - target: android-arm32
             host: ubuntu-latest

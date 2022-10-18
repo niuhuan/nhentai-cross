@@ -8,9 +8,12 @@ import Mobile
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    
-    let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-    MobileInitApplication(documentsPath)
+      
+      let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+      let applicationSupportsPath = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)[0]
+
+      MobileMigration(documentsPath, applicationSupportsPath)
+      MobileInitApplication(applicationSupportsPath)
     
     let controller = self.window.rootViewController as! FlutterViewController
     let channel = FlutterMethodChannel.init(name: "nhentai", binaryMessenger: controller as! FlutterBinaryMessenger)
