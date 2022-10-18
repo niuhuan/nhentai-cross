@@ -1,7 +1,6 @@
 package nhentai
 
 import (
-	"context"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
@@ -19,35 +18,19 @@ import (
 	"time"
 )
 
-var webAddr string
-var imgAddr string
-
 var dialer = &net.Dialer{
 	Timeout:   30 * time.Second,
 	KeepAlive: 30 * time.Second,
 }
+
 var client = &source.Client{
 	Client: http.Client{
 		Transport: &http.Transport{
 			Proxy:                 nil,
-			TLSHandshakeTimeout:   time.Second * 10,
-			ExpectContinueTimeout: time.Second * 10,
-			ResponseHeaderTimeout: time.Second * 10,
-			IdleConnTimeout:       time.Second * 10,
-			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-				if addr == "nhentai.net:443" {
-					if webAddr != "" {
-						return dialer.DialContext(ctx, network, webAddr)
-
-					}
-				} else if addr == "t.nhentai.net:443" || addr == "i.nhentai.net:443" || addr == "t2.nhentai.net:443" || addr == "t5.nhentai.net:443" {
-					if imgAddr != "" {
-						return dialer.DialContext(ctx, network, imgAddr)
-
-					}
-				}
-				return dialer.DialContext(ctx, network, addr)
-			},
+			TLSHandshakeTimeout:   time.Second * 20,
+			ExpectContinueTimeout: time.Second * 20,
+			ResponseHeaderTimeout: time.Second * 20,
+			IdleConnTimeout:       time.Second * 20,
 		},
 	},
 }
@@ -55,8 +38,6 @@ var client = &source.Client{
 func initClient() {
 	proxy, _ := properties.LoadProperty("proxy", "")
 	setProxy(proxy)
-	webAddr, _ = properties.LoadProperty("webAddr", "")
-	imgAddr, _ = properties.LoadProperty("imgAddr", "")
 }
 
 func setProxy(proxyUrlString string) (string, error) {
@@ -77,26 +58,6 @@ func setProxy(proxyUrlString string) (string, error) {
 
 func getProxy(_ string) (string, error) {
 	return properties.LoadProperty("proxy", "")
-}
-
-func setWebAddress(host string) (string, error) {
-	properties.SaveProperty("webAddr", host)
-	webAddr = host
-	return "", nil
-}
-
-func getWebAddress(_ string) (string, error) {
-	return webAddr, nil
-}
-
-func setImgAddress(host string) (string, error) {
-	properties.SaveProperty("imgAddr", host)
-	imgAddr = host
-	return "", nil
-}
-
-func getImgAddress(_ string) (string, error) {
-	return imgAddr, nil
 }
 
 func comics(params string) (string, error) {

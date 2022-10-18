@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:app_links/app_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:nhentai/basic/configs/img_address.dart';
+import 'package:nhentai/basic/configs/proxy.dart';
 import 'package:nhentai/basic/configs/reader_direction.dart';
 import 'package:nhentai/basic/configs/reader_type.dart';
 import 'package:nhentai/basic/configs/themes.dart';
 import 'package:nhentai/basic/configs/version.dart';
-import 'package:nhentai/basic/configs/web_address.dart';
-
-import '../basic/common/common.dart';
 import 'comic_info_screen.dart';
 import 'comics_screen.dart';
 
@@ -32,8 +29,7 @@ class _InitScreenState extends State<InitScreen> {
     await initVersion();
     autoCheckNewVersion();
     await initTheme();
-    await initWebAddressConfig();
-    await initImgAddressConfig();
+    await initProxy();
     await initReaderType();
     await initReaderDirection();
 

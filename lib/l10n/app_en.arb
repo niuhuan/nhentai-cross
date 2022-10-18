@@ -48,5 +48,7 @@
   "rightToLeft": "Right to left",
   "chooseReaderType": "Choose reader type",
   "webtoon": "WebToon",
-  "gallery": "Gallery"
+  "gallery": "Gallery",
+  "proxy": "Proxy",
+  "inputProxyDesc": "socks5://host:port/"
 }

@@ -19,18 +19,6 @@ class NHentai {
     });
   }
 
-  /// 可用的网站分流
-  Future<List<String>> availableWebAddresses() async {
-    List list = jsonDecode(await _flatInvoke("availableWebAddresses", ""));
-    return list.map((e) => e as String).toList();
-  }
-
-  /// 可用的图片分流
-  Future<List<String>> availableImgAddresses() async {
-    List list = jsonDecode(await _flatInvoke("availableImgAddresses", ""));
-    return list.map((e) => e as String).toList();
-  }
-
   /// 设置代理
   Future setProxy(String proxyUrl) {
     return _flatInvoke("setProxy", proxyUrl);
@@ -39,26 +27,6 @@ class NHentai {
   /// 获取代理
   Future<String> getProxy() {
     return _flatInvoke("getProxy", "");
-  }
-
-  /// 设置网站分流
-  Future setWebAddress(String host) {
-    return _flatInvoke("setWebAddress", host);
-  }
-
-  /// 获取网站分流
-  Future<String> getWebAddress() {
-    return _flatInvoke("getWebAddress", "");
-  }
-
-  /// 设置图片分流
-  Future setImgAddress(String host) {
-    return _flatInvoke("setImgAddress", host);
-  }
-
-  /// 获取图片分流
-  Future<String> getImgAddress() {
-    return _flatInvoke("getImgAddress", "");
   }
 
   /// 获取漫画

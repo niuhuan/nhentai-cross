@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:nhentai/basic/channels/nhentai.dart';
-import 'package:nhentai/basic/configs/img_address.dart';
+import 'package:nhentai/basic/configs/proxy.dart';
 import 'package:nhentai/basic/configs/reader_direction.dart';
 import 'package:nhentai/basic/configs/reader_type.dart';
-import 'package:nhentai/basic/configs/web_address.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:nhentai/basic/entities/entities.dart';
 import 'package:nhentai/screens/components/images.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -353,17 +353,9 @@ class _SettingPanelState extends State<_SettingPanel> {
             ),
             _bottomIcon(
               icon: Icons.shuffle,
-              title: currentWebAddressName(context),
+              title: AppLocalizations.of(context)!.proxy,
               onPressed: () async {
-                await chooseWebAddress(context);
-                setState(() {});
-              },
-            ),
-            _bottomIcon(
-              icon: Icons.repeat_one,
-              title: currentImgAddressName(context),
-              onPressed: () async {
-                await chooseImgAddress(context);
+                await chooseProxy(context);
                 setState(() {});
               },
             ),

@@ -44,10 +44,6 @@ var methods = map[string]func(string) (string, error){
 	"availableImgAddresses":      availableImgAddresses,
 	"setProxy":                   setProxy,
 	"getProxy":                   getProxy,
-	"setWebAddress":              setWebAddress,
-	"getWebAddress":              getWebAddress,
-	"setImgAddress":              setImgAddress,
-	"getImgAddress":              getImgAddress,
 	"comics":                     comics,
 	"comicsByTagName":            comicsByTagName,
 	"comicsBySearchRaw":          comicsBySearchRaw,
@@ -64,8 +60,8 @@ var methods = map[string]func(string) (string, error){
 	"downloadSetDelete":          downloadSetDelete,
 	"httpGet":                    httpGet,
 	"convertImageToJPEG100":      convertImageToJPEG100,
-	"setCookie": setCookie,
-	"setUserAgent": setUserAgent,
+	"setCookie":                  setCookie,
+	"setUserAgent":               setUserAgent,
 }
 
 func setUserAgent(s string) (string, error) {

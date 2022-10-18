@@ -48,5 +48,7 @@
   "rightToLeft": "从右到左",
   "chooseReaderType": "选择阅读器类型",
   "webtoon": "WebToon",
-  "gallery": "相册"
+  "gallery": "相册",
+  "proxy": "代理",
+  "inputProxyDesc": "socks5://host:port/"
 }
